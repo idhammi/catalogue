@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import id.idham.catalogue.data.mapper.MovieMapper
 import id.idham.catalogue.data.source.local.entity.MovieEntity
 import id.idham.catalogue.databinding.FragmentMovieBinding
@@ -65,7 +64,6 @@ class MovieFragment : Fragment() {
         val movieAdapter = MovieAdapter()
         movieAdapter.setItems(data)
         with(binding.rvMovies) {
-            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = movieAdapter
         }

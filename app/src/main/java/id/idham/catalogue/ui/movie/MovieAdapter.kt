@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import id.idham.catalogue.BuildConfig.imageUrl
-import id.idham.catalogue.R
 import id.idham.catalogue.data.source.local.entity.MovieEntity
 import id.idham.catalogue.databinding.ItemsMovieBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
@@ -40,8 +38,8 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: MovieEntity) {
             with(binding) {
-                txtName.text = movie.title
-                txtDescription.text = movie.overview
+                tvTitle.text = movie.title
+                tvYear.text = movie.getYearRelease()
                 itemView.setOnClickListener {
                     val intent = Intent(itemView.context, DetailMovieActivity::class.java)
                     intent.putExtra(DetailMovieActivity.MOVIE_ID, movie.id.toString())
@@ -54,10 +52,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
                 Glide.with(itemView.context)
                     .load(imageUrl + movie.imagePath)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(
-                        RequestOptions.placeholderOf(R.drawable.ic_loading)
-                            .error(R.drawable.ic_error)
-                    ).into(imgPhoto)
+                    .into(imgPhoto)
             }
         }
     }

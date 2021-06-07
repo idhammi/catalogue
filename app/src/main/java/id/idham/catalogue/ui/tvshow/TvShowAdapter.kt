@@ -6,15 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import id.idham.catalogue.BuildConfig.imageUrl
-import id.idham.catalogue.R
 import id.idham.catalogue.data.source.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.ItemsTvShowBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
 
-class TvShowAdapter(private val callback: TvShowFragmentCallback) :
-    RecyclerView.Adapter<TvShowAdapter.ViewHolder>() {
+class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.ViewHolder>() {
     private val listCourses = ArrayList<TvShowEntity>()
 
     fun setItems(items: List<TvShowEntity>?) {
@@ -40,8 +37,8 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShow: TvShowEntity) {
             with(binding) {
-                txtName.text = tvShow.name
-                txtDescription.text = tvShow.overview
+                tvTitle.text = tvShow.name
+                tvYear.text = tvShow.getYearRelease()
                 itemView.setOnClickListener {
                     val intent = Intent(itemView.context, DetailMovieActivity::class.java)
                     intent.putExtra(DetailMovieActivity.MOVIE_ID, tvShow.id.toString())
@@ -51,14 +48,10 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
                     )
                     itemView.context.startActivity(intent)
                 }
-                imgShare.setOnClickListener { callback.onShareClick(tvShow) }
                 Glide.with(itemView.context)
                     .load(imageUrl + tvShow.imagePath)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(
-                        RequestOptions.placeholderOf(R.drawable.ic_loading)
-                            .error(R.drawable.ic_error)
-                    ).into(imgPhoto)
+                    .into(imgPhoto)
             }
         }
     }

@@ -1,31 +1,47 @@
 package id.idham.catalogue.ui.home
 
 import android.os.Bundle
-import androidx.annotation.StringRes
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import id.idham.catalogue.R
 import id.idham.catalogue.databinding.ActivityHomeBinding
+import id.idham.catalogue.ui.favorite.FavoriteFragment
+import id.idham.catalogue.ui.movie.MovieFragment
+import id.idham.catalogue.ui.tvshow.TvShowFragment
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    companion object {
-        @StringRes
-        val TAB_TITLES = intArrayOf(R.string.movies, R.string.tv_shows)
-    }
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val screenSlidePagerAdapter = ScreenSlidePagerAdapter(this)
-        binding.viewPager.adapter = screenSlidePagerAdapter
-        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, pos ->
-            tab.text = resources.getString(TAB_TITLES[pos])
-        }.attach()
-
         supportActionBar?.elevation = 0f
+
+        binding.bnMain.setOnNavigationItemSelectedListener(this)
+        loadFragment(MovieFragment())
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        var fragment: Fragment? = null
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
+        when (item.itemId) {
+            R.id.menu_movie -> if (currentFragment !is MovieFragment) fragment = MovieFragment()
+            R.id.menu_tv_show -> if (currentFragment !is TvShowFragment) fragment = TvShowFragment()
+            R.id.menu_favorite -> if (currentFragment !is FavoriteFragment) fragment =
+                FavoriteFragment()
+        }
+        return loadFragment(fragment)
+    }
+
+    private fun loadFragment(fragment: Fragment?): Boolean {
+        if (fragment != null) {
+            supportFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
+            return true
+        }
+        return false
     }
 }

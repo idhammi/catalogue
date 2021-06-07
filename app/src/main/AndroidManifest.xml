@@ -16,7 +16,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="id.idham.catalogue.ui.detail.DetailMovieActivity"
-            android:label="@string/title_activity_detail_movie"
+            android:label=""
             android:parentActivityName="id.idham.catalogue.ui.home.HomeActivity"
             android:theme="@style/Theme.Academy.NoActionBar">
             <meta-data

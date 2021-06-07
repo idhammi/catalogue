@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import id.idham.catalogue.R
 import id.idham.catalogue.data.mapper.TvShowMapper
 import id.idham.catalogue.data.source.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.FragmentTvShowBinding
@@ -18,7 +15,7 @@ import id.idham.catalogue.utils.toast
 import id.idham.catalogue.utils.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TvShowFragment : Fragment(), TvShowFragmentCallback {
+class TvShowFragment : Fragment() {
 
     private val viewModel by viewModel<TvShowViewModel>()
     private lateinit var binding: FragmentTvShowBinding
@@ -64,25 +61,12 @@ class TvShowFragment : Fragment(), TvShowFragmentCallback {
     }
 
     private fun setData(data: List<TvShowEntity>) {
-        val adapter = TvShowAdapter(this)
+        val adapter = TvShowAdapter()
         adapter.setItems(data)
 
         with(binding.rvTvShows) {
-            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             this.adapter = adapter
-        }
-    }
-
-    override fun onShareClick(tvShow: TvShowEntity) {
-        if (activity != null) {
-            val mimeType = "text/plain"
-            ShareCompat.IntentBuilder
-                .from(requireActivity())
-                .setType(mimeType)
-                .setChooserTitle("Share this movie.")
-                .setText(resources.getString(R.string.share_text, tvShow.name))
-                .startChooser()
         }
     }
 

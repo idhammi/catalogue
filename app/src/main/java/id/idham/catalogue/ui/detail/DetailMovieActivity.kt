@@ -1,10 +1,13 @@
 package id.idham.catalogue.ui.detail
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import id.idham.catalogue.BuildConfig.imageUrl
 import id.idham.catalogue.R
 import id.idham.catalogue.data.mapper.MovieMapper
@@ -38,6 +41,9 @@ class DetailMovieActivity : AppCompatActivity() {
 
     private lateinit var binding: ContentDetailMovieBinding
 
+    private var menuItem: Menu? = null
+    private var isFavorite: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,6 +69,43 @@ class DetailMovieActivity : AppCompatActivity() {
                 else if (type is MovieType.TV) viewModel.getTvShow()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detail, menu)
+        menuItem = menu
+        setFavorite()
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_favorite -> {
+                isFavorite = !isFavorite
+                setFavorite()
+            }
+            R.id.action_share -> onShareClick()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setFavorite() {
+        if (isFavorite) {
+            menuItem?.getItem(0)?.icon =
+                ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
+        } else
+            menuItem?.getItem(0)?.icon =
+                ContextCompat.getDrawable(this, R.drawable.ic_favorited_black_24dp)
+    }
+
+    private fun onShareClick() {
+        val mimeType = "text/plain"
+        ShareCompat.IntentBuilder
+            .from(this)
+            .setType(mimeType)
+            .setChooserTitle("Share this movie.")
+            .setText(resources.getString(R.string.share_text, binding.txtName.text))
+            .startChooser()
     }
 
     private fun onObserveData() {
@@ -115,10 +158,6 @@ class DetailMovieActivity : AppCompatActivity() {
         Glide.with(this)
             .load(imageUrl + movieEntity.imagePath)
             .transform(RoundedCorners(20))
-            .apply(
-                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                    .error(R.drawable.ic_error)
-            )
             .into(binding.imgPhoto)
     }
 
@@ -134,10 +173,6 @@ class DetailMovieActivity : AppCompatActivity() {
         Glide.with(this)
             .load(imageUrl + tvShowEntity.imagePath)
             .transform(RoundedCorners(20))
-            .apply(
-                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                    .error(R.drawable.ic_error)
-            )
             .into(binding.imgPhoto)
     }
 
