@@ -1,4 +1,4 @@
-package id.idham.catalogue.ui.tvshow
+package id.idham.catalogue.ui.favorite.tvshow
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,29 +9,29 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
-import id.idham.catalogue.data.remote.response.TvShowModel
+import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.ItemsTvShowBinding
 import id.idham.catalogue.vo.Resource
 import id.idham.catalogue.vo.Status
 
-class TvShowAdapter(private val listener: (TvShowModel?) -> Unit) :
-    PagedListAdapter<TvShowModel, TvShowAdapter.ViewHolder>(DIFF_CALLBACK) {
+class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
+    PagedListAdapter<TvShowEntity, FavoriteTvShowAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowModel>() {
-            override fun areItemsTheSame(oldItem: TvShowModel, newItem: TvShowModel): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowEntity>() {
+            override fun areItemsTheSame(oldItem: TvShowEntity, newItem: TvShowEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvShowModel, newItem: TvShowModel): Boolean {
+            override fun areContentsTheSame(oldItem: TvShowEntity, newItem: TvShowEntity): Boolean {
                 return oldItem == newItem
             }
         }
     }
 
-    private var mNetworkState: Resource<TvShowModel>? = null
+    private var mNetworkState: Resource<TvShowEntity>? = null
 
-    fun setNetworkState(networkState: Resource<TvShowModel>?) {
+    fun setNetworkState(networkState: Resource<TvShowEntity>?) {
         val hadExtraRow = hasExtraRow()
         mNetworkState = networkState
         if (hadExtraRow != hasExtraRow()) {
@@ -61,13 +61,13 @@ class TvShowAdapter(private val listener: (TvShowModel?) -> Unit) :
 
     class ViewHolder(private val binding: ItemsTvShowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(listener: (TvShowModel?) -> Unit, item: TvShowModel) {
+        fun bind(listener: (TvShowEntity?) -> Unit, item: TvShowEntity) {
             with(binding) {
                 tvTitle.text = item.name
                 tvYear.text = item.getYearRelease()
                 itemView.setOnClickListener { listener(item) }
                 Glide.with(itemView.context)
-                    .load(BuildConfig.imageUrl + item.posterPath)
+                    .load(BuildConfig.imageUrl + item.imagePath)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgPhoto)

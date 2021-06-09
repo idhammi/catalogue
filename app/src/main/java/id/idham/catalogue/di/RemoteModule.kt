@@ -1,6 +1,6 @@
 package id.idham.catalogue.di
 
-import id.idham.catalogue.data.source.remote.*
+import id.idham.catalogue.data.remote.*
 import org.koin.dsl.module
 
 val remoteModule = module {

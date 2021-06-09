@@ -1,7 +1,7 @@
 package id.idham.catalogue.data.mapper
 
-import id.idham.catalogue.data.source.local.entity.MovieEntity
-import id.idham.catalogue.data.source.remote.response.MovieModel
+import id.idham.catalogue.data.local.entity.MovieEntity
+import id.idham.catalogue.data.remote.response.MovieModel
 
 object MovieMapper {
     fun mapEntityToResponse(data: MovieEntity) =

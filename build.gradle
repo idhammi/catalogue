@@ -54,4 +54,7 @@ ext {
     koinVersion = '3.0.2'
 
     archLifecycleVersion = '2.3.1'
+    roomVersion = '2.2.3'
+    roomRuntimeVersion = '2.3.0'
+    pagingVersion = '2.1.2'
 }

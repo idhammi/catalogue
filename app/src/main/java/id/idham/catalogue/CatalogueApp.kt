@@ -1,6 +1,7 @@
 package id.idham.catalogue
 
 import android.app.Application
+import id.idham.catalogue.di.localModule
 import id.idham.catalogue.di.remoteModule
 import id.idham.catalogue.di.repositoryModule
 import id.idham.catalogue.di.viewModelModule
@@ -26,7 +27,8 @@ class CatalogueApp : Application() {
                 listOf(
                     viewModelModule,
                     repositoryModule,
-                    remoteModule
+                    remoteModule,
+                    localModule
                 )
             )
         }

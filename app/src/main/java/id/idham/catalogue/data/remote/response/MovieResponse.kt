@@ -1,13 +1,14 @@
-package id.idham.catalogue.data.source.remote.response
+package id.idham.catalogue.data.remote.response
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
+import id.idham.catalogue.utils.DateUtils
 import kotlinx.android.parcel.Parcelize
 
 data class MovieResponse(
-    @Json(name = "page") val page: String,
-    @Json(name = "total_results") val totalResults: String,
-    @Json(name = "total_pages") val totalPages: String,
+    @Json(name = "page") val page: Int,
+    @Json(name = "total_results") val totalResults: Int,
+    @Json(name = "total_pages") val totalPages: Int,
     @Json(name = "results") val results: List<MovieModel>?
 )
 
@@ -20,4 +21,7 @@ data class MovieModel(
     @Json(name = "vote_average") val voteAverage: Double?,
     @Json(name = "overview") val overview: String?,
     @Json(name = "release_date") val releaseDate: String?
-) : Parcelable
+) : Parcelable {
+    fun getYearRelease() = releaseDate?.take(4)
+    fun getFormattedDate() = DateUtils.getFullDateString(releaseDate)
+}

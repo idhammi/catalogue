@@ -1,7 +1,7 @@
 package id.idham.catalogue.data.mapper
 
-import id.idham.catalogue.data.source.local.entity.TvShowEntity
-import id.idham.catalogue.data.source.remote.response.TvShowModel
+import id.idham.catalogue.data.local.entity.TvShowEntity
+import id.idham.catalogue.data.remote.response.TvShowModel
 
 object TvShowMapper {
     fun mapEntityToResponse(data: TvShowEntity) =

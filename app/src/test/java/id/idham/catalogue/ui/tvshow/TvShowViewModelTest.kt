@@ -3,9 +3,9 @@ package id.idham.catalogue.ui.tvshow
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import id.idham.catalogue.data.CatalogueRepository
-import id.idham.catalogue.data.source.remote.Resource
-import id.idham.catalogue.data.source.remote.response.TvShowModel
-import id.idham.catalogue.data.source.remote.response.TvShowResponse
+import id.idham.catalogue.vo.Resource
+import id.idham.catalogue.data.remote.response.TvShowModel
+import id.idham.catalogue.data.remote.response.TvShowResponse
 import id.idham.catalogue.ui.utils.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before

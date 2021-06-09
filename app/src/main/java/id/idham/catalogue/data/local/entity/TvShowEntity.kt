@@ -1,15 +1,18 @@
-package id.idham.catalogue.data.source.local.entity
+package id.idham.catalogue.data.local.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import id.idham.catalogue.utils.DateUtils
 
+@Entity(tableName = "tvshow")
 data class TvShowEntity(
-    var id: Int,
+    @PrimaryKey var id: Int,
     var name: String?,
     var overview: String?,
     var firstAirDate: String?,
     var rating: Double?,
     var lang: String?,
-    var bookmarked: Boolean = false,
+    var favorite: Boolean = false,
     var imagePath: String?
 ) {
     fun getYearRelease() = firstAirDate?.take(4)

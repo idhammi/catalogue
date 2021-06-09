@@ -10,17 +10,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import id.idham.catalogue.BuildConfig.imageUrl
 import id.idham.catalogue.R
-import id.idham.catalogue.data.mapper.MovieMapper
-import id.idham.catalogue.data.mapper.TvShowMapper
-import id.idham.catalogue.data.source.local.entity.MovieEntity
-import id.idham.catalogue.data.source.local.entity.TvShowEntity
+import id.idham.catalogue.data.local.entity.MovieEntity
+import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.ActivityDetailMovieBinding
-import id.idham.catalogue.databinding.ContentDetailMovieBinding
-import id.idham.catalogue.utils.EspressoIdlingResource
-import id.idham.catalogue.utils.enums.Status
 import id.idham.catalogue.utils.gone
 import id.idham.catalogue.utils.toast
 import id.idham.catalogue.utils.visible
+import id.idham.catalogue.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.Serializable
 import java.util.*
@@ -39,35 +35,26 @@ class DetailMovieActivity : AppCompatActivity() {
         object TV : MovieType()
     }
 
-    private lateinit var binding: ContentDetailMovieBinding
+    private lateinit var binding: ActivityDetailMovieBinding
+    private lateinit var movie: MovieEntity
+    private lateinit var tvShow: TvShowEntity
 
     private var menuItem: Menu? = null
     private var isFavorite: Boolean = false
 
+    private val detailType: MovieType
+        get() = intent.getSerializableExtra(MOVIE_TYPE) as MovieType
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val activityDetailCourseBinding = ActivityDetailMovieBinding.inflate(layoutInflater)
-        binding = activityDetailCourseBinding.detailContent
-
-        setContentView(activityDetailCourseBinding.root)
-
-        setSupportActionBar(activityDetailCourseBinding.toolbar)
+        binding = ActivityDetailMovieBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        onObserveData()
 
         val extras = intent.extras
         if (extras != null) {
-            val id = extras.getString(MOVIE_ID)
-            val type = extras.getSerializable(MOVIE_TYPE) as MovieType
-
-            if (id != null) {
-                EspressoIdlingResource.increment() // for instrumentation test only
-                viewModel.setSelectedId(id)
-                if (type is MovieType.MOVIE) viewModel.getMovie()
-                else if (type is MovieType.TV) viewModel.getTvShow()
-            }
+            viewModel.setSelectedId(extras.getInt(MOVIE_ID))
+            onObserveData(detailType)
         }
     }
 
@@ -80,7 +67,9 @@ class DetailMovieActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> onBackPressed()
             R.id.action_favorite -> {
+                updateFavorite()
                 isFavorite = !isFavorite
                 setFavorite()
             }
@@ -95,7 +84,7 @@ class DetailMovieActivity : AppCompatActivity() {
                 ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
         } else
             menuItem?.getItem(0)?.icon =
-                ContextCompat.getDrawable(this, R.drawable.ic_favorited_black_24dp)
+                ContextCompat.getDrawable(this, R.drawable.ic_favorite_border_black_24dp)
     }
 
     private fun onShareClick() {
@@ -108,45 +97,49 @@ class DetailMovieActivity : AppCompatActivity() {
             .startChooser()
     }
 
-    private fun onObserveData() {
-        viewModel.dataMovie.observe(this, {
-            when (it.status) {
-                Status.LOADING -> binding.progressBar.visible()
-                Status.SUCCESS -> {
-                    binding.progressBar.gone()
-                    it.data?.let { data -> populateMovie(MovieMapper.mapResponseToEntity(data)) }
+    private fun onObserveData(type: MovieType) {
+        if (type is MovieType.MOVIE) {
+            viewModel.getMovie().observe(this, {
+                when (it.status) {
+                    Status.LOADING -> {
+                        binding.groupTitle.gone()
+                        binding.progressBar.visible()
+                    }
+                    Status.SUCCESS -> {
+                        binding.groupTitle.visible()
+                        binding.progressBar.gone()
+                        it.data?.let { data -> populateMovie(data) }
+                    }
+                    Status.ERROR -> {
+                        binding.progressBar.gone()
+                        toast(it.message.toString())
+                    }
                 }
-                Status.ERROR -> {
-                    binding.progressBar.gone()
-                    toast(it.message.toString())
+            })
+        } else if (type is MovieType.TV) {
+            viewModel.getTvShow().observe(this, {
+                when (it.status) {
+                    Status.LOADING -> {
+                        binding.groupTitle.gone()
+                        binding.progressBar.visible()
+                    }
+                    Status.SUCCESS -> {
+                        binding.groupTitle.visible()
+                        binding.progressBar.gone()
+                        it.data?.let { data -> populateTvShow(data) }
+                    }
+                    Status.ERROR -> {
+                        binding.progressBar.gone()
+                        toast(it.message.toString())
+                    }
                 }
-            }
-            // for instrumentation test only
-            if (!EspressoIdlingResource.getEspressoIdlingResource().isIdleNow) {
-                EspressoIdlingResource.decrement()
-            }
-        })
-
-        viewModel.dataTvShow.observe(this, {
-            when (it.status) {
-                Status.LOADING -> binding.progressBar.visible()
-                Status.SUCCESS -> {
-                    binding.progressBar.gone()
-                    it.data?.let { data -> populateTvShow(TvShowMapper.mapResponseToEntity(data)) }
-                }
-                Status.ERROR -> {
-                    binding.progressBar.gone()
-                    toast(it.message.toString())
-                }
-            }
-            // for instrumentation test only
-            if (!EspressoIdlingResource.getEspressoIdlingResource().isIdleNow) {
-                EspressoIdlingResource.decrement()
-            }
-        })
+            })
+        }
     }
 
     private fun populateMovie(movieEntity: MovieEntity) {
+        movie = movieEntity
+        isFavorite = movieEntity.favorite
         binding.txtName.text = movieEntity.title
         binding.txtYear.text = movieEntity.getYearRelease()
         binding.txtRating.text = movieEntity.rating.toString()
@@ -159,9 +152,12 @@ class DetailMovieActivity : AppCompatActivity() {
             .load(imageUrl + movieEntity.imagePath)
             .transform(RoundedCorners(20))
             .into(binding.imgPhoto)
+        setFavorite()
     }
 
     private fun populateTvShow(tvShowEntity: TvShowEntity) {
+        tvShow = tvShowEntity
+        isFavorite = tvShowEntity.favorite
         binding.txtName.text = tvShowEntity.name
         binding.txtYear.text = tvShowEntity.getYearRelease()
         binding.txtRating.text = tvShowEntity.rating.toString()
@@ -174,10 +170,18 @@ class DetailMovieActivity : AppCompatActivity() {
             .load(imageUrl + tvShowEntity.imagePath)
             .transform(RoundedCorners(20))
             .into(binding.imgPhoto)
+        setFavorite()
     }
 
     private fun getLanguageName(lang: String): String {
         val loc = Locale(lang)
         return loc.getDisplayLanguage(loc)
     }
+
+    private fun updateFavorite() {
+        if (detailType is MovieType.MOVIE) {
+            viewModel.setFavoriteMovie(movie)
+        } else viewModel.setFavoriteTvShow(tvShow)
+    }
+
 }

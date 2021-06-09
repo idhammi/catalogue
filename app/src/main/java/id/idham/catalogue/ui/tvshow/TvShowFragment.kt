@@ -1,24 +1,26 @@
 package id.idham.catalogue.ui.tvshow
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import id.idham.catalogue.data.mapper.TvShowMapper
-import id.idham.catalogue.data.source.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.FragmentTvShowBinding
-import id.idham.catalogue.utils.EspressoIdlingResource
-import id.idham.catalogue.utils.enums.Status
+import id.idham.catalogue.ui.detail.DetailMovieActivity
 import id.idham.catalogue.utils.gone
+import id.idham.catalogue.utils.observe
 import id.idham.catalogue.utils.toast
 import id.idham.catalogue.utils.visible
+import id.idham.catalogue.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvShowFragment : Fragment() {
 
     private val viewModel by viewModel<TvShowViewModel>()
     private lateinit var binding: FragmentTvShowBinding
+
+    private val tvShowAdapter = TvShowAdapter { tvShow -> goToDetail(tvShow?.id) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -29,45 +31,35 @@ class TvShowFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvTvShows.adapter = tvShowAdapter
         observeData()
-        EspressoIdlingResource.increment() // for instrumentation test only
-        viewModel.getTvShows()
     }
 
     private fun observeData() {
-        viewModel.dataTvShows.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.LOADING -> binding.progressBar.visible()
-                Status.SUCCESS -> {
-                    binding.progressBar.gone()
-                    it.data?.let { list ->
-                        val results = ArrayList<TvShowEntity>()
-                        for (data in list) {
-                            results.add(TvShowMapper.mapResponseToEntity(data))
-                        }
-                        setData(results)
+        with(viewModel) {
+            val tvShows = getTvShows()
+            observe(tvShows.pagedList) {
+                tvShowAdapter.submitList(it)
+            }
+            observe(tvShows.networkState) {
+                tvShowAdapter.setNetworkState(it)
+                when (it.status) {
+                    Status.LOADING -> if (it.message == "1") binding.progressBar.visible()
+                    Status.ERROR -> {
+                        binding.progressBar.gone()
+                        requireActivity().toast(it.message.toString())
                     }
-                }
-                Status.ERROR -> {
-                    binding.progressBar.gone()
-                    requireActivity().toast(it.message.toString())
+                    else -> binding.progressBar.gone()
                 }
             }
-            // for instrumentation test only
-            if (!EspressoIdlingResource.getEspressoIdlingResource().isIdleNow) {
-                EspressoIdlingResource.decrement()
-            }
-        })
+        }
     }
 
-    private fun setData(data: List<TvShowEntity>) {
-        val adapter = TvShowAdapter()
-        adapter.setItems(data)
-
-        with(binding.rvTvShows) {
-            setHasFixedSize(true)
-            this.adapter = adapter
-        }
+    private fun goToDetail(id: Int?) {
+        val intent = Intent(requireContext(), DetailMovieActivity::class.java)
+        intent.putExtra(DetailMovieActivity.MOVIE_ID, id)
+        intent.putExtra(DetailMovieActivity.MOVIE_TYPE, DetailMovieActivity.MovieType.TV)
+        requireContext().startActivity(intent)
     }
 
 }

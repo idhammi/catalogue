@@ -1,4 +1,4 @@
-package id.idham.catalogue.data.source.remote
+package id.idham.catalogue.data.remote
 
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -8,7 +8,7 @@ import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.BuildConfig.apiKey
 import id.idham.catalogue.BuildConfig.baseUrl
 import id.idham.catalogue.CatalogueApp
-import id.idham.catalogue.data.source.remote.endpoint.ApiService
+import id.idham.catalogue.data.remote.endpoint.ApiService
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

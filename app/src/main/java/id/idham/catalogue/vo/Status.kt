@@ -1,4 +1,4 @@
-package id.idham.catalogue.utils.enums
+package id.idham.catalogue.vo
 
 enum class Status {
     LOADING,
