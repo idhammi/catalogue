@@ -10,7 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.data.remote.response.TvShowModel
-import id.idham.catalogue.databinding.ItemsTvShowBinding
+import id.idham.catalogue.databinding.ItemsMovieBinding
 import id.idham.catalogue.vo.Resource
 import id.idham.catalogue.vo.Status
 
@@ -48,7 +48,7 @@ class TvShowAdapter(private val listener: (TvShowModel?) -> Unit) :
     private fun hasExtraRow() = mNetworkState != null && mNetworkState?.status != Status.SUCCESS
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemsTvShowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemsMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -59,7 +59,7 @@ class TvShowAdapter(private val listener: (TvShowModel?) -> Unit) :
         }
     }
 
-    class ViewHolder(private val binding: ItemsTvShowBinding) :
+    class ViewHolder(private val binding: ItemsMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: (TvShowModel?) -> Unit, item: TvShowModel) {
             with(binding) {

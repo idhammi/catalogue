@@ -10,6 +10,8 @@ import id.idham.catalogue.databinding.ActivityHomeBinding
 import id.idham.catalogue.ui.favorite.FavoriteFragment
 import id.idham.catalogue.ui.movie.MovieFragment
 import id.idham.catalogue.ui.tvshow.TvShowFragment
+import id.idham.catalogue.utils.gone
+import id.idham.catalogue.utils.visible
 
 class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -19,9 +21,8 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.elevation = 0f
-
-        binding.bnMain.setOnNavigationItemSelectedListener(this)
+        setSupportActionBar(binding.toolbar)
+        binding.content.bnMain.setOnNavigationItemSelectedListener(this)
         loadFragment(MovieFragment())
     }
 
@@ -29,10 +30,18 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         var fragment: Fragment? = null
         val currentFragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
         when (item.itemId) {
-            R.id.menu_movie -> if (currentFragment !is MovieFragment) fragment = MovieFragment()
-            R.id.menu_tv_show -> if (currentFragment !is TvShowFragment) fragment = TvShowFragment()
-            R.id.menu_favorite -> if (currentFragment !is FavoriteFragment) fragment =
-                FavoriteFragment()
+            R.id.menu_movie -> {
+                binding.toolbar.visible()
+                if (currentFragment !is MovieFragment) fragment = MovieFragment()
+            }
+            R.id.menu_tv_show -> {
+                binding.toolbar.visible()
+                if (currentFragment !is TvShowFragment) fragment = TvShowFragment()
+            }
+            R.id.menu_favorite -> {
+                binding.toolbar.gone()
+                if (currentFragment !is FavoriteFragment) fragment = FavoriteFragment()
+            }
         }
         return loadFragment(fragment)
     }

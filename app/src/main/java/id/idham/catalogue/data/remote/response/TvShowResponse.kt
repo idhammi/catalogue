@@ -2,7 +2,6 @@ package id.idham.catalogue.data.remote.response
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
-import id.idham.catalogue.utils.DateUtils
 import kotlinx.android.parcel.Parcelize
 
 data class TvShowResponse(
@@ -23,5 +22,4 @@ data class TvShowModel(
     @Json(name = "first_air_date") val firstAirDate: String?
 ) : Parcelable {
     fun getYearRelease() = firstAirDate?.take(4)
-    fun getFormattedDate() = DateUtils.getFullDateString(firstAirDate)
 }

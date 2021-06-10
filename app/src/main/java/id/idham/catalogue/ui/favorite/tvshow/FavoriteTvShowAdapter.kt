@@ -10,9 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.data.local.entity.TvShowEntity
-import id.idham.catalogue.databinding.ItemsTvShowBinding
-import id.idham.catalogue.vo.Resource
-import id.idham.catalogue.vo.Status
+import id.idham.catalogue.databinding.ItemsFavoriteBinding
 
 class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
     PagedListAdapter<TvShowEntity, FavoriteTvShowAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -29,26 +27,9 @@ class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
         }
     }
 
-    private var mNetworkState: Resource<TvShowEntity>? = null
-
-    fun setNetworkState(networkState: Resource<TvShowEntity>?) {
-        val hadExtraRow = hasExtraRow()
-        mNetworkState = networkState
-        if (hadExtraRow != hasExtraRow()) {
-            if (!hasExtraRow()) {
-                notifyItemRemoved(itemCount)
-            } else {
-                notifyItemInserted(itemCount)
-            }
-        } else if (hadExtraRow) {
-            notifyItemChanged(itemCount - 1)
-        }
-    }
-
-    private fun hasExtraRow() = mNetworkState != null && mNetworkState?.status != Status.SUCCESS
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemsTvShowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemsFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -59,12 +40,13 @@ class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
         }
     }
 
-    class ViewHolder(private val binding: ItemsTvShowBinding) :
+    class ViewHolder(private val binding: ItemsFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: (TvShowEntity?) -> Unit, item: TvShowEntity) {
             with(binding) {
-                tvTitle.text = item.name
-                tvYear.text = item.getYearRelease()
+                val title = "${item.title} (${item.getYearRelease()})"
+                tvTitle.text = title
+                tvDesc.text = item.overview
                 itemView.setOnClickListener { listener(item) }
                 Glide.with(itemView.context)
                     .load(BuildConfig.imageUrl + item.imagePath)

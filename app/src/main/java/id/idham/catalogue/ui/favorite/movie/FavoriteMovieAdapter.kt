@@ -10,7 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.data.local.entity.MovieEntity
-import id.idham.catalogue.databinding.ItemsMovieBinding
+import id.idham.catalogue.databinding.ItemsFavoriteBinding
 
 class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
     PagedListAdapter<MovieEntity, FavoriteMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -28,7 +28,8 @@ class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemsMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemsFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -39,12 +40,13 @@ class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
         }
     }
 
-    class ViewHolder(private val binding: ItemsMovieBinding) :
+    class ViewHolder(private val binding: ItemsFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: (MovieEntity?) -> Unit, item: MovieEntity) {
             with(binding) {
-                tvTitle.text = item.title
-                tvYear.text = item.getYearRelease()
+                val title = "${item.title} (${item.getYearRelease()})"
+                tvTitle.text = title
+                tvDesc.text = item.overview
                 itemView.setOnClickListener { listener(item) }
                 Glide.with(itemView.context)
                     .load(BuildConfig.imageUrl + item.imagePath)

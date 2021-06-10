@@ -6,10 +6,14 @@ import id.idham.catalogue.data.local.dao.MovieDao
 import id.idham.catalogue.data.local.dao.TvShowDao
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
+import id.idham.catalogue.utils.SortUtils
 
 class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvShowDao) {
 
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> = movieDao.getFavoriteMovies()
+    fun getFavoriteMovies(sort: String, table: String): DataSource.Factory<Int, MovieEntity> {
+        val query = SortUtils.getSortedQuery(sort, table)
+        return movieDao.getFavoriteMovies(query)
+    }
 
     fun getMovieById(id: Int): LiveData<MovieEntity> = movieDao.getMovieById(id)
 
@@ -20,7 +24,10 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         movieDao.update(movie)
     }
 
-    fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity> = tvShowDao.getFavoriteTvShows()
+    fun getFavoriteTvShows(sort: String, table: String): DataSource.Factory<Int, TvShowEntity> {
+        val query = SortUtils.getSortedQuery(sort, table)
+        return tvShowDao.getFavoriteTvShows(query)
+    }
 
     fun getTvShowById(id: Int): LiveData<TvShowEntity> = tvShowDao.getTvShowById(id)
 

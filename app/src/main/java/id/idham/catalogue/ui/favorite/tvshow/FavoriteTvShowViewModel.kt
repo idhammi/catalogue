@@ -5,6 +5,7 @@ import id.idham.catalogue.data.CatalogueDataSource
 
 class FavoriteTvShowViewModel(private val catalogueDataSource: CatalogueDataSource) : ViewModel() {
 
-    fun getFavoriteTvShows() = catalogueDataSource.getFavoriteTvShows()
+    fun getFavoriteTvShows(sort: String, table: String) =
+        catalogueDataSource.getFavoriteTvShows(sort, table)
 
 }

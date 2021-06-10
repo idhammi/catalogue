@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:spanCount="3"
-        tools:listitem="@layout/items_tv_show">
+        tools:listitem="@layout/items_movie">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -34,5 +34,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/lyt_error"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

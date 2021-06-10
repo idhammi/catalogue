@@ -64,7 +64,7 @@ class RemoteDataSource(
                     apiService.getTvShowDetailAsync(id).await()
                 )
             } catch (t: Throwable) {
-                result.value = ApiResponse.error(t.message.toString(), null)
+                result.value = ApiResponse.error(t.message.toString())
             }
         }
         return result

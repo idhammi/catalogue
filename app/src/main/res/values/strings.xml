@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Movie Catalogue</string>
-    <string name="title_activity_detail_movie">Movie Details</string>
     <string name="movies">Movies</string>
     <string name="tv_shows">TV Shows</string>
     <string name="share_text">See %s more on themoviedb.org</string>
@@ -11,4 +10,10 @@
     <string name="first_air_date">First Air Date</string>
     <string name="favorites">Favorites</string>
     <string name="share">Share</string>
+    <string name="sort">Sort</string>
+    <string name="by_title">By Title</string>
+    <string name="by_rating">By Rating</string>
+    <string name="share_title">Share this movie.</string>
+    <string name="empty_desc">No data found</string>
+    <string name="something_error">Something error</string>
 </resources>

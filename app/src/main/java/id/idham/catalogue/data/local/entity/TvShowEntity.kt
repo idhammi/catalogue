@@ -7,7 +7,7 @@ import id.idham.catalogue.utils.DateUtils
 @Entity(tableName = "tvshow")
 data class TvShowEntity(
     @PrimaryKey var id: Int,
-    var name: String?,
+    var title: String?,
     var overview: String?,
     var firstAirDate: String?,
     var rating: Double?,

@@ -76,8 +76,8 @@ class CatalogueRepository(
         }.asLiveData()
     }
 
-    override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
-        return LivePagedListBuilder(localDataSource.getFavoriteMovies(), config).build()
+    override fun getFavoriteMovies(sort: String, table: String): LiveData<PagedList<MovieEntity>> {
+        return LivePagedListBuilder(localDataSource.getFavoriteMovies(sort, table), config).build()
     }
 
     override fun setFavoriteMovie(movie: MovieEntity, favorite: Boolean) {
@@ -86,8 +86,10 @@ class CatalogueRepository(
         }
     }
 
-    override fun getFavoriteTvShows(): LiveData<PagedList<TvShowEntity>> {
-        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(), config).build()
+    override fun getFavoriteTvShows(
+        sort: String, table: String
+    ): LiveData<PagedList<TvShowEntity>> {
+        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(sort, table), config).build()
     }
 
     override fun setFavoriteTvShow(tvShow: TvShowEntity, favorite: Boolean) {

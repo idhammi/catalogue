@@ -3,13 +3,14 @@ package id.idham.catalogue.data.local.dao
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import id.idham.catalogue.data.local.entity.MovieEntity
 
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM movie WHERE favorite = 1")
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity>
+    @RawQuery(observedEntities = [MovieEntity::class])
+    fun getFavoriteMovies(query: SupportSQLiteQuery): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getMovieById(id: Int): LiveData<MovieEntity>
@@ -19,8 +20,5 @@ interface MovieDao {
 
     @Update
     fun update(movie: MovieEntity)
-
-    @Delete
-    fun delete(movie: MovieEntity)
 
 }

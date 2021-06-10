@@ -92,7 +92,7 @@ class DetailMovieActivity : AppCompatActivity() {
         ShareCompat.IntentBuilder
             .from(this)
             .setType(mimeType)
-            .setChooserTitle("Share this movie.")
+            .setChooserTitle(getString(R.string.share_title))
             .setText(resources.getString(R.string.share_text, binding.txtName.text))
             .startChooser()
     }
@@ -158,7 +158,7 @@ class DetailMovieActivity : AppCompatActivity() {
     private fun populateTvShow(tvShowEntity: TvShowEntity) {
         tvShow = tvShowEntity
         isFavorite = tvShowEntity.favorite
-        binding.txtName.text = tvShowEntity.name
+        binding.txtName.text = tvShowEntity.title
         binding.txtYear.text = tvShowEntity.getYearRelease()
         binding.txtRating.text = tvShowEntity.rating.toString()
         binding.txtLanguage.text = getLanguageName(tvShowEntity.lang.toString())

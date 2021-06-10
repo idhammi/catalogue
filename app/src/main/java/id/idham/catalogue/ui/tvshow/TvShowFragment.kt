@@ -10,7 +10,6 @@ import id.idham.catalogue.databinding.FragmentTvShowBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
 import id.idham.catalogue.utils.gone
 import id.idham.catalogue.utils.observe
-import id.idham.catalogue.utils.toast
 import id.idham.catalogue.utils.visible
 import id.idham.catalogue.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,7 +46,7 @@ class TvShowFragment : Fragment() {
                     Status.LOADING -> if (it.message == "1") binding.progressBar.visible()
                     Status.ERROR -> {
                         binding.progressBar.gone()
-                        requireActivity().toast(it.message.toString())
+                        binding.lytError.root.visible()
                     }
                     else -> binding.progressBar.gone()
                 }
