@@ -1,11 +1,10 @@
 package id.idham.catalogue.ui.favorite.tvshow
 
 import androidx.lifecycle.ViewModel
-import id.idham.catalogue.data.CatalogueDataSource
+import id.idham.catalogue.data.CatalogueRepository
 
-class FavoriteTvShowViewModel(private val catalogueDataSource: CatalogueDataSource) : ViewModel() {
+class FavoriteTvShowViewModel(private val repository: CatalogueRepository) : ViewModel() {
 
-    fun getFavoriteTvShows(sort: String, table: String) =
-        catalogueDataSource.getFavoriteTvShows(sort, table)
+    fun getFavoriteTvShows(sort: String) = repository.getFavoriteTvShows(sort)
 
 }

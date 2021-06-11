@@ -10,8 +10,8 @@ import id.idham.catalogue.utils.SortUtils
 
 class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvShowDao) {
 
-    fun getFavoriteMovies(sort: String, table: String): DataSource.Factory<Int, MovieEntity> {
-        val query = SortUtils.getSortedQuery(sort, table)
+    fun getFavoriteMovies(sort: String): DataSource.Factory<Int, MovieEntity> {
+        val query = SortUtils.getSortedQuery(sort, "movie")
         return movieDao.getFavoriteMovies(query)
     }
 
@@ -24,8 +24,8 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         movieDao.update(movie)
     }
 
-    fun getFavoriteTvShows(sort: String, table: String): DataSource.Factory<Int, TvShowEntity> {
-        val query = SortUtils.getSortedQuery(sort, table)
+    fun getFavoriteTvShows(sort: String): DataSource.Factory<Int, TvShowEntity> {
+        val query = SortUtils.getSortedQuery(sort, "tvshow")
         return tvShowDao.getFavoriteTvShows(query)
     }
 

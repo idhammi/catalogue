@@ -18,7 +18,7 @@ import id.idham.catalogue.vo.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class CatalogueRepository(
+class FakeCatalogueRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val contextProviders: ContextProviders

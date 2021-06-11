@@ -1,10 +1,10 @@
 package id.idham.catalogue.ui.tvshow
 
 import androidx.lifecycle.ViewModel
-import id.idham.catalogue.data.CatalogueDataSource
+import id.idham.catalogue.data.CatalogueRepository
 
-class TvShowViewModel(private val catalogueDataSource: CatalogueDataSource) : ViewModel() {
+class TvShowViewModel(private val repository: CatalogueRepository) : ViewModel() {
 
-    fun getTvShows() = catalogueDataSource.getTvShows()
+    fun getTvShows() = repository.getTvShows()
 
 }

@@ -1,13 +1,15 @@
 package id.idham.catalogue.ui.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import id.idham.catalogue.data.CatalogueRepository
-import id.idham.catalogue.vo.Resource
-import id.idham.catalogue.data.remote.response.MovieModel
-import id.idham.catalogue.data.remote.response.TvShowModel
+import id.idham.catalogue.data.local.entity.MovieEntity
+import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.ui.utils.TestCoroutineRule
+import id.idham.catalogue.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,6 +17,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -34,90 +37,48 @@ class DetailMovieViewModelTest {
     private lateinit var repository: CatalogueRepository
 
     @Mock
-    private lateinit var movieResponse: MovieModel
+    private lateinit var observerMovie: Observer<Resource<MovieEntity>>
 
     @Mock
-    private lateinit var tvShowResponse: TvShowModel
-
-    @Mock
-    private lateinit var observerMovie: Observer<Resource<MovieModel>>
-
-    @Mock
-    private lateinit var observerTvShow: Observer<Resource<TvShowModel>>
+    private lateinit var observerTvShow: Observer<Resource<TvShowEntity>>
 
     @Before
     fun setUp() {
         viewModel = DetailMovieViewModel(repository)
-        viewModel.setSelectedId("10")
+        viewModel.setSelectedId(10)
     }
 
     @Test
-    fun `given success response when get movie`() {
+    fun `get movie`() {
         testCoroutineRule.runBlockingTest {
-            // GIVEN
-            Mockito.`when`(repository.getMovieDetail(10)).thenReturn(movieResponse)
+            val expected = MutableLiveData<Resource<MovieEntity>>()
+            expected.value = Resource.success(MovieEntity(10, "", "", "", 0.0, "", false, ""))
 
-            // WHEN
-            viewModel.dataMovie.observeForever(observerMovie)
-            viewModel.getMovie()
+            `when`(repository.getMovieDetail(10)).thenReturn(expected)
 
-            // THEN
-            Mockito.verify(observerMovie).onChanged(Resource.loading())
-            Mockito.verify(observerMovie).onChanged(Resource.success(movieResponse))
-            viewModel.dataMovie.removeObserver(observerMovie)
+            viewModel.getMovie().observeForever(observerMovie)
+            Mockito.verify(observerMovie).onChanged(expected.value)
+
+            val expectedValue = expected.value
+            val actualValue = viewModel.getMovie().value
+            Assert.assertEquals(expectedValue, actualValue)
         }
     }
 
     @Test
-    fun `given error response when get movie`() {
+    fun `get tv show`() {
         testCoroutineRule.runBlockingTest {
-            // GIVEN
-            val error = Error()
-            Mockito.`when`(repository.getMovieDetail(10)).thenThrow(error)
+            val expected = MutableLiveData<Resource<TvShowEntity>>()
+            expected.value = Resource.success(TvShowEntity(10, "", "", "", 0.0, "", false, ""))
 
-            // WHEN
-            viewModel.dataMovie.observeForever(observerMovie)
-            viewModel.getMovie()
+            `when`(repository.getTvShowDetail(10)).thenReturn(expected)
 
-            // THEN
-            Mockito.verify(observerMovie).onChanged(Resource.loading())
-            Mockito.verify(observerMovie).onChanged(Resource.error(null, null, error))
-            viewModel.dataMovie.removeObserver(observerMovie)
-        }
-    }
+            viewModel.getTvShow().observeForever(observerTvShow)
+            Mockito.verify(observerTvShow).onChanged(expected.value)
 
-    @Test
-    fun `given success response when get tv show`() {
-        testCoroutineRule.runBlockingTest {
-            // GIVEN
-            Mockito.`when`(repository.getTvShowDetail(10)).thenReturn(tvShowResponse)
-
-            // WHEN
-            viewModel.dataTvShow.observeForever(observerTvShow)
-            viewModel.getTvShow()
-
-            // THEN
-            Mockito.verify(observerTvShow).onChanged(Resource.loading())
-            Mockito.verify(observerTvShow).onChanged(Resource.success(tvShowResponse))
-            viewModel.dataTvShow.removeObserver(observerTvShow)
-        }
-    }
-
-    @Test
-    fun `given error response when get tv show`() {
-        testCoroutineRule.runBlockingTest {
-            // GIVEN
-            val error = Error()
-            Mockito.`when`(repository.getTvShowDetail(10)).thenThrow(error)
-
-            // WHEN
-            viewModel.dataTvShow.observeForever(observerTvShow)
-            viewModel.getTvShow()
-
-            // THEN
-            Mockito.verify(observerTvShow).onChanged(Resource.loading())
-            Mockito.verify(observerTvShow).onChanged(Resource.error(null, null, error))
-            viewModel.dataTvShow.removeObserver(observerTvShow)
+            val expectedValue = expected.value
+            val actualValue = viewModel.getTvShow().value
+            Assert.assertEquals(expectedValue, actualValue)
         }
     }
 }

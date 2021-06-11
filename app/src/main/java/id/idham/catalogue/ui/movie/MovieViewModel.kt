@@ -1,10 +1,10 @@
 package id.idham.catalogue.ui.movie
 
 import androidx.lifecycle.ViewModel
-import id.idham.catalogue.data.CatalogueDataSource
+import id.idham.catalogue.data.CatalogueRepository
 
-class MovieViewModel(private val catalogueDataSource: CatalogueDataSource) : ViewModel() {
+class MovieViewModel(private val repository: CatalogueRepository) : ViewModel() {
 
-    fun getMovies() = catalogueDataSource.getMovies()
+    fun getMovies() = repository.getMovies()
 
 }

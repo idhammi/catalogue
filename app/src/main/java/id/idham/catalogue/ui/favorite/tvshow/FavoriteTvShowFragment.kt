@@ -59,8 +59,7 @@ class FavoriteTvShowFragment : Fragment() {
 
     private fun observeData() {
         binding.progressBar.visible()
-        viewModel.getFavoriteTvShows(selectedSort, "tvshow")
-            .observe(viewLifecycleOwner, tvShowObserver)
+        viewModel.getFavoriteTvShows(selectedSort).observe(viewLifecycleOwner, tvShowObserver)
     }
 
     private val tvShowObserver = Observer<PagedList<TvShowEntity>> { movies ->
@@ -74,15 +73,29 @@ class FavoriteTvShowFragment : Fragment() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             super.onItemRangeInserted(positionStart, itemCount)
             val count = adapter.itemCount
-            if (itemCount == 0 && count == 0) binding.lytEmpty.root.visible()
-            else binding.lytEmpty.root.gone()
+            if (itemCount == 0 && count == 0) {
+                binding.tvSort.gone()
+                binding.rvTvShows.gone()
+                binding.lytEmpty.root.visible()
+            } else {
+                binding.tvSort.visible()
+                binding.rvTvShows.visible()
+                binding.lytEmpty.root.gone()
+            }
         }
 
         override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
             super.onItemRangeRemoved(positionStart, itemCount)
             val count = adapter.itemCount
-            if (count == 0) binding.lytEmpty.root.visible()
-            else binding.lytEmpty.root.gone()
+            if (count == 0) {
+                binding.tvSort.gone()
+                binding.rvTvShows.gone()
+                binding.lytEmpty.root.visible()
+            } else {
+                binding.tvSort.visible()
+                binding.rvTvShows.visible()
+                binding.lytEmpty.root.gone()
+            }
         }
     }
 

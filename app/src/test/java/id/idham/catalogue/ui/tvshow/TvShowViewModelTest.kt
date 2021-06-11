@@ -1,13 +1,12 @@
 package id.idham.catalogue.ui.tvshow
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import id.idham.catalogue.data.CatalogueRepository
-import id.idham.catalogue.vo.Resource
 import id.idham.catalogue.data.remote.response.TvShowModel
-import id.idham.catalogue.data.remote.response.TvShowResponse
 import id.idham.catalogue.ui.utils.TestCoroutineRule
+import id.idham.catalogue.vo.Pagination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,10 +33,7 @@ class TvShowViewModelTest {
     private lateinit var repository: CatalogueRepository
 
     @Mock
-    private lateinit var tvShowResponse: TvShowResponse
-
-    @Mock
-    private lateinit var observer: Observer<Resource<List<TvShowModel>>>
+    private lateinit var tvShowResponse: Pagination<TvShowModel>
 
     @Before
     fun setUp() {
@@ -45,37 +41,17 @@ class TvShowViewModelTest {
     }
 
     @Test
-    fun `given success response when get tv shows`() {
+    fun `get tv shows`() {
         testCoroutineRule.runBlockingTest {
             // GIVEN
             Mockito.`when`(repository.getTvShows()).thenReturn(tvShowResponse)
 
             // WHEN
-            viewModel.dataTvShows.observeForever(observer)
-            viewModel.getTvShows()
+            val response = viewModel.getTvShows()
 
             // THEN
-            Mockito.verify(observer).onChanged(Resource.loading())
-            Mockito.verify(observer).onChanged(Resource.success(emptyList()))
-            viewModel.dataTvShows.removeObserver(observer)
-        }
-    }
-
-    @Test
-    fun `given error response when get tv shows`() {
-        testCoroutineRule.runBlockingTest {
-            // GIVEN
-            val error = Error()
-            Mockito.`when`(repository.getTvShows()).thenThrow(error)
-
-            // WHEN
-            viewModel.dataTvShows.observeForever(observer)
-            viewModel.getTvShows()
-
-            // THEN
-            Mockito.verify(observer).onChanged(Resource.loading())
-            Mockito.verify(observer).onChanged(Resource.error(null, null, error))
-            viewModel.dataTvShows.removeObserver(observer)
+            Assert.assertEquals(tvShowResponse.pagedList, response.pagedList)
+            Assert.assertEquals(tvShowResponse.networkState, response.networkState)
         }
     }
 }

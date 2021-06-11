@@ -1,6 +1,5 @@
 package id.idham.catalogue.utils
 
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
 object EspressoIdlingResource {
@@ -13,9 +12,5 @@ object EspressoIdlingResource {
 
     fun decrement() {
         idlingResource.decrement()
-    }
-
-    fun getEspressoIdlingResource(): IdlingResource {
-        return idlingResource
     }
 }
