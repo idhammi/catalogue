@@ -1,8 +1,5 @@
 package id.idham.catalogue.data
 
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import androidx.paging.PagingData
 import id.idham.catalogue.data.local.LocalDataSource
 import id.idham.catalogue.data.local.entity.MovieEntity
@@ -10,46 +7,31 @@ import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.data.mapper.MovieMapper
 import id.idham.catalogue.data.mapper.TvShowMapper
 import id.idham.catalogue.data.remote.ApiResponse
-import id.idham.catalogue.data.remote.ApiResponseFlow
 import id.idham.catalogue.data.remote.response.MovieModel
 import id.idham.catalogue.data.remote.response.TvShowModel
 import id.idham.catalogue.data.remote.source.RemoteDataSource
-import id.idham.catalogue.utils.ContextProviders
-import id.idham.catalogue.vo.Pagination
-import id.idham.catalogue.vo.Resource
-import kotlinx.coroutines.GlobalScope
+import id.idham.catalogue.utils.AppExecutors
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 class CatalogueRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    private val contextProviders: ContextProviders
+    private val appExecutors: AppExecutors
 ) : CatalogueDataSource {
 
-    companion object {
-        private const val PAGE_SIZE = 10
-    }
-
-    private val config = PagedList.Config.Builder()
-        .setEnablePlaceholders(false)
-        .setInitialLoadSizeHint(PAGE_SIZE)
-        .setPageSize(PAGE_SIZE)
-        .build()
-
     override fun getMovies(): Flow<PagingData<MovieModel>> {
-        return remoteDataSource.getMoviesFlow()
+        return remoteDataSource.getMovies()
     }
 
-    override fun getMovieDetail(id: Int): Flow<ResourceFlow<MovieEntity>> =
-        object : NetworkBoundResourceFlow<MovieEntity, MovieModel>() {
+    override fun getMovieDetail(id: Int): Flow<Resource<MovieEntity>> =
+        object : NetworkBoundResource<MovieEntity, MovieModel>() {
             override fun loadFromDB(): Flow<MovieEntity> =
                 localDataSource.getMovieById(id)
 
             override fun shouldFetch(data: MovieEntity?): Boolean =
                 data == null
 
-            override suspend fun createCall(): Flow<ApiResponseFlow<MovieModel>> =
+            override suspend fun createCall(): Flow<ApiResponse<MovieModel>> =
                 remoteDataSource.getMovieDetail(id)
 
             override suspend fun saveCallResult(data: MovieModel) {
@@ -57,45 +39,40 @@ class CatalogueRepository(
             }
         }.asFlow()
 
-    override fun getTvShows(): Pagination<TvShowModel> {
+    override fun getTvShows(): Flow<PagingData<TvShowModel>> {
         return remoteDataSource.getTvShows()
     }
 
-    override fun getTvShowDetail(id: Int): LiveData<Resource<TvShowEntity>> {
-        return object : NetworkBoundResource<TvShowEntity, TvShowModel>(contextProviders) {
-            override fun loadFromDb(): LiveData<TvShowEntity> =
+    override fun getTvShowDetail(id: Int): Flow<Resource<TvShowEntity>> =
+        object : NetworkBoundResource<TvShowEntity, TvShowModel>() {
+            override fun loadFromDB(): Flow<TvShowEntity> =
                 localDataSource.getTvShowById(id)
 
             override fun shouldFetch(data: TvShowEntity?): Boolean =
                 data == null
 
-            override fun createCall(): LiveData<ApiResponse<TvShowModel>> =
+            override suspend fun createCall(): Flow<ApiResponse<TvShowModel>> =
                 remoteDataSource.getTvShowDetail(id)
 
-            override fun saveCallResult(data: TvShowModel?) {
-                data?.let { localDataSource.insertTvShow(TvShowMapper.mapResponseToEntity(data)) }
+            override suspend fun saveCallResult(data: TvShowModel) {
+                localDataSource.insertTvShow(TvShowMapper.mapResponseToEntity(data))
             }
-        }.asLiveData()
-    }
+        }.asFlow()
 
-    override fun getFavoriteMovies(sort: String): LiveData<PagedList<MovieEntity>> {
-        return LivePagedListBuilder(localDataSource.getFavoriteMovies(sort), config).build()
+    override fun getFavoriteMovies(sort: String): Flow<List<MovieEntity>> {
+        return localDataSource.getFavoriteMovies(sort)
     }
 
     override fun setFavoriteMovie(movie: MovieEntity, favorite: Boolean) {
-        GlobalScope.launch(contextProviders.IO) {
-            localDataSource.setFavoriteMovie(movie, favorite)
-        }
+        appExecutors.diskIO().execute() { localDataSource.setFavoriteMovie(movie, favorite) }
     }
 
-    override fun getFavoriteTvShows(sort: String): LiveData<PagedList<TvShowEntity>> {
-        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(sort), config).build()
+    override fun getFavoriteTvShows(sort: String): Flow<List<TvShowEntity>> {
+        return localDataSource.getFavoriteTvShows(sort)
     }
 
     override fun setFavoriteTvShow(tvShow: TvShowEntity, favorite: Boolean) {
-        GlobalScope.launch(contextProviders.IO) {
-            localDataSource.setFavoriteTvShow(tvShow, favorite)
-        }
+        appExecutors.diskIO().execute() { localDataSource.setFavoriteTvShow(tvShow, favorite) }
     }
 
 }

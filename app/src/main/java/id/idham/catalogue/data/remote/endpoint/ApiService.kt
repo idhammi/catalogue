@@ -4,7 +4,6 @@ import id.idham.catalogue.data.remote.response.MovieModel
 import id.idham.catalogue.data.remote.response.MovieResponse
 import id.idham.catalogue.data.remote.response.TvShowModel
 import id.idham.catalogue.data.remote.response.TvShowResponse
-import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -24,13 +23,13 @@ interface ApiService {
 
     // TV Shows
     @GET("tv/popular")
-    fun getTvShowsPopularAsync(
+    suspend fun getTvShowsPopularAsync(
         @Query("page") page: Int
-    ): Deferred<TvShowResponse>
+    ): TvShowResponse
 
     @GET("tv/{tvId}")
-    fun getTvShowDetailAsync(
+    suspend fun getTvShowDetailAsync(
         @Path("tvId") tvId: Int
-    ): Deferred<TvShowModel>
+    ): TvShowModel
 
 }

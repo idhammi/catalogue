@@ -10,14 +10,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import id.idham.catalogue.BuildConfig.imageUrl
 import id.idham.catalogue.R
-import id.idham.catalogue.data.ResourceFlow
+import id.idham.catalogue.data.Resource
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.ActivityDetailMovieBinding
 import id.idham.catalogue.utils.gone
 import id.idham.catalogue.utils.toast
 import id.idham.catalogue.utils.visible
-import id.idham.catalogue.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.Serializable
 import java.util.*
@@ -102,16 +101,16 @@ class DetailMovieActivity : AppCompatActivity() {
         if (type is MovieType.MOVIE) {
             viewModel.getMovie().observe(this) {
                 when (it) {
-                    is ResourceFlow.Loading -> {
+                    is Resource.Loading -> {
                         binding.groupTitle.gone()
                         binding.progressBar.visible()
                     }
-                    is ResourceFlow.Success -> {
+                    is Resource.Success -> {
                         binding.groupTitle.visible()
                         binding.progressBar.gone()
                         it.data?.let { data -> populateMovie(data) }
                     }
-                    is ResourceFlow.Error -> {
+                    is Resource.Error -> {
                         binding.progressBar.gone()
                         toast(it.message.toString())
                     }
@@ -119,17 +118,17 @@ class DetailMovieActivity : AppCompatActivity() {
             }
         } else if (type is MovieType.TV) {
             viewModel.getTvShow().observe(this) {
-                when (it.status) {
-                    Status.LOADING -> {
+                when (it) {
+                    is Resource.Loading -> {
                         binding.groupTitle.gone()
                         binding.progressBar.visible()
                     }
-                    Status.SUCCESS -> {
+                    is Resource.Success -> {
                         binding.groupTitle.visible()
                         binding.progressBar.gone()
                         it.data?.let { data -> populateTvShow(data) }
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         binding.progressBar.gone()
                         toast(it.message.toString())
                     }

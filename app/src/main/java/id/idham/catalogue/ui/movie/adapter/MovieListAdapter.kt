@@ -11,8 +11,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.data.remote.response.MovieModel
 import id.idham.catalogue.databinding.ItemMovieBinding
-import id.idham.catalogue.vo.Resource
-import id.idham.catalogue.vo.Status
 
 class MovieListAdapter(private val listener: (MovieModel?) -> Unit) :
     PagingDataAdapter<MovieModel, MovieListAdapter.ViewHolder>(DIFF_CALLBACK) {

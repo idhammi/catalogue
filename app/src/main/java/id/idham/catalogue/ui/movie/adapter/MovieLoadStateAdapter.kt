@@ -7,7 +7,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import id.idham.catalogue.R
-import id.idham.catalogue.databinding.ItemMoviesLoadStateFooterBinding
+import id.idham.catalogue.databinding.ItemLoadStateFooterBinding
 
 class MovieLoadStateAdapter(
     private val retry: () -> Unit
@@ -24,28 +24,28 @@ class MovieLoadStateAdapter(
     }
 
     class ViewHolder(
-        private val binding: ItemMoviesLoadStateFooterBinding,
+        private val binding: ItemLoadStateFooterBinding,
         retry: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.btnMoviesRetry.setOnClickListener { retry.invoke() }
+            binding.btnLoadRetry.setOnClickListener { retry.invoke() }
         }
 
         fun bind(loadState: LoadState) {
             if (loadState is LoadState.Error) {
-                binding.tvMoviesErrorDescription.text = loadState.error.localizedMessage
+                binding.tvLoadErrorDesc.text = loadState.error.localizedMessage
             }
-            binding.progressMoviesLoadMore.isVisible = loadState is LoadState.Loading
-            binding.btnMoviesRetry.isVisible = loadState is LoadState.Error
-            binding.tvMoviesErrorDescription.isVisible = loadState is LoadState.Error
+            binding.pbLoadMore.isVisible = loadState is LoadState.Loading
+            binding.btnLoadRetry.isVisible = loadState is LoadState.Error
+            binding.tvLoadErrorDesc.isVisible = loadState is LoadState.Error
         }
 
         companion object {
             fun create(parent: ViewGroup, retry: () -> Unit): ViewHolder {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_movies_load_state_footer, parent, false)
-                val binding = ItemMoviesLoadStateFooterBinding.bind(view)
+                    .inflate(R.layout.item_load_state_footer, parent, false)
+                val binding = ItemLoadStateFooterBinding.bind(view)
                 return ViewHolder(binding, retry)
             }
         }

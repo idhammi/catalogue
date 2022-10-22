@@ -2,8 +2,8 @@ package id.idham.catalogue.ui.favorite.movie
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -13,7 +13,7 @@ import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.databinding.ItemFavoriteBinding
 
 class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
-    PagedListAdapter<MovieEntity, FavoriteMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<MovieEntity, FavoriteMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {

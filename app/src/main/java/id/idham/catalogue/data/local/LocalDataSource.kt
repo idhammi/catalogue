@@ -1,7 +1,5 @@
 package id.idham.catalogue.data.local
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import id.idham.catalogue.data.local.dao.MovieDao
 import id.idham.catalogue.data.local.dao.TvShowDao
 import id.idham.catalogue.data.local.entity.MovieEntity
@@ -11,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvShowDao) {
 
-    fun getFavoriteMovies(sort: String): DataSource.Factory<Int, MovieEntity> {
+    fun getFavoriteMovies(sort: String): Flow<List<MovieEntity>> {
         val query = SortUtils.getSortedQuery(sort, "movie")
         return movieDao.getFavoriteMovies(query)
     }
@@ -25,14 +23,14 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         movieDao.update(movie)
     }
 
-    fun getFavoriteTvShows(sort: String): DataSource.Factory<Int, TvShowEntity> {
+    fun getFavoriteTvShows(sort: String): Flow<List<TvShowEntity>> {
         val query = SortUtils.getSortedQuery(sort, "tvshow")
         return tvShowDao.getFavoriteTvShows(query)
     }
 
-    fun getTvShowById(id: Int): LiveData<TvShowEntity> = tvShowDao.getTvShowById(id)
+    fun getTvShowById(id: Int): Flow<TvShowEntity> = tvShowDao.getTvShowById(id)
 
-    fun insertTvShow(tvShows: TvShowEntity) = tvShowDao.insert(tvShows)
+    suspend fun insertTvShow(tvShows: TvShowEntity) = tvShowDao.insert(tvShows)
 
     fun setFavoriteTvShow(tvShow: TvShowEntity, favorite: Boolean) {
         tvShow.favorite = favorite

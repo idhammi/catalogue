@@ -7,11 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import id.idham.catalogue.R
-import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.FragmentFavoriteTvShowBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
 import id.idham.catalogue.utils.SortUtils
@@ -58,14 +55,8 @@ class FavoriteTvShowFragment : Fragment() {
     }
 
     private fun observeData() {
-        binding.progressBar.visible()
-        viewModel.getFavoriteTvShows(selectedSort).observe(viewLifecycleOwner, tvShowObserver)
-    }
-
-    private val tvShowObserver = Observer<PagedList<TvShowEntity>> { movies ->
-        if (movies != null) {
-            binding.progressBar.gone()
-            adapter.submitList(movies)
+        viewModel.getFavoriteTvShows(selectedSort).observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
     }
 

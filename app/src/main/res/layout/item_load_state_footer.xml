@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tvMoviesErrorDescription"
+        android:id="@+id/tv_load_error_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,21 +16,22 @@
         tools:text="Some Error" />
 
     <ProgressBar
-        android:id="@+id/progressMoviesLoadMore"
+        android:id="@+id/pb_load_more"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/red_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnMoviesRetry"
+        android:id="@+id/btn_load_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/retry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMoviesErrorDescription" />
+        app:layout_constraintTop_toBottomOf="@id/tv_load_error_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

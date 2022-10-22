@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import id.idham.catalogue.databinding.FragmentTvShowBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
-import id.idham.catalogue.utils.gone
-import id.idham.catalogue.utils.observe
-import id.idham.catalogue.utils.visible
-import id.idham.catalogue.vo.Status
+import id.idham.catalogue.ui.movie.adapter.MovieLoadStateAdapter
+import id.idham.catalogue.ui.tvshow.adapter.TvShowListAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TvShowFragment : Fragment() {
@@ -19,7 +23,7 @@ class TvShowFragment : Fragment() {
     private val viewModel by viewModel<TvShowViewModel>()
     private lateinit var binding: FragmentTvShowBinding
 
-    private val tvShowAdapter = TvShowAdapter { tvShow -> goToDetail(tvShow?.id) }
+    private var adapter: TvShowListAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,26 +34,37 @@ class TvShowFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvTvShows.adapter = tvShowAdapter
+        initView()
         observeData()
     }
 
+    private fun initView() {
+        adapter = TvShowListAdapter { item -> goToDetail(item?.id) }
+
+        binding.rvTvShows.adapter = adapter?.withLoadStateHeaderAndFooter(
+            header = MovieLoadStateAdapter { adapter?.retry() },
+            footer = MovieLoadStateAdapter { adapter?.retry() }
+        )
+
+        adapter?.addLoadStateListener { loadState -> renderUi(loadState) }
+        binding.lytError.btnRetry.setOnClickListener { adapter?.retry() }
+    }
+
+    private fun renderUi(loadState: CombinedLoadStates) {
+        val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
+
+        binding.rvTvShows.isVisible = !isListEmpty
+        binding.lytEmpty.root.isVisible = isListEmpty
+
+        binding.rvTvShows.isVisible = loadState.source.refresh is LoadState.NotLoading
+        binding.pbTvShow.isVisible = loadState.source.refresh is LoadState.Loading
+        binding.lytError.root.isVisible = loadState.source.refresh is LoadState.Error
+    }
+
     private fun observeData() {
-        with(viewModel) {
-            val tvShows = getTvShows()
-            observe(tvShows.pagedList) {
-                tvShowAdapter.submitList(it)
-            }
-            observe(tvShows.networkState) {
-                tvShowAdapter.setNetworkState(it)
-                when (it.status) {
-                    Status.LOADING -> if (it.message == "1") binding.progressBar.visible()
-                    Status.ERROR -> {
-                        binding.progressBar.gone()
-                        binding.lytError.root.visible()
-                    }
-                    else -> binding.progressBar.gone()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getTvShows().collectLatest { tvShows ->
+                adapter?.submitData(tvShows)
             }
         }
     }

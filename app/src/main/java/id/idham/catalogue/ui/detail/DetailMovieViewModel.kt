@@ -16,7 +16,7 @@ class DetailMovieViewModel(private val repository: CatalogueRepository) : ViewMo
 
     fun getMovie() = repository.getMovieDetail(id).asLiveData()
 
-    fun getTvShow() = repository.getTvShowDetail(id)
+    fun getTvShow() = repository.getTvShowDetail(id).asLiveData()
 
     fun setFavoriteTvShow(tvShow: TvShowEntity) {
         val favorite = !tvShow.favorite

@@ -8,7 +8,7 @@ import id.idham.catalogue.ui.favorite.movie.FavoriteMovieViewModel
 import id.idham.catalogue.ui.favorite.tvshow.FavoriteTvShowViewModel
 import id.idham.catalogue.ui.movie.MovieViewModel
 import id.idham.catalogue.ui.tvshow.TvShowViewModel
-import id.idham.catalogue.utils.ContextProviders
+import id.idham.catalogue.utils.AppExecutors
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -21,8 +21,8 @@ val viewModelModule = module {
 }
 
 val repositoryModule = module {
-    single { ContextProviders.getInstance() }
-    single { RemoteDataSource(get(), get()) }
+    factory { AppExecutors() }
+    single { RemoteDataSource(get()) }
     single { LocalDataSource(get(), get()) }
     single { CatalogueRepository(get(), get(), get()) }
 }

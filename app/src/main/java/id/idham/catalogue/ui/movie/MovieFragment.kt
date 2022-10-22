@@ -39,7 +39,7 @@ class MovieFragment : Fragment() {
     }
 
     private fun initView() {
-        adapter = MovieListAdapter { movie -> goToDetail(movie?.id) }
+        adapter = MovieListAdapter { item -> goToDetail(item?.id) }
 
         binding.rvMovies.adapter = adapter?.withLoadStateHeaderAndFooter(
             header = MovieLoadStateAdapter { adapter?.retry() },
@@ -47,18 +47,18 @@ class MovieFragment : Fragment() {
         )
 
         adapter?.addLoadStateListener { loadState -> renderUi(loadState) }
-        binding.btnMoviesRetry.setOnClickListener { adapter?.retry() }
+        binding.lytError.btnRetry.setOnClickListener { adapter?.retry() }
     }
 
     private fun renderUi(loadState: CombinedLoadStates) {
         val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
 
         binding.rvMovies.isVisible = !isListEmpty
-        binding.lytError.root.isVisible = isListEmpty
+        binding.lytEmpty.root.isVisible = isListEmpty
 
         binding.rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
-        binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-        binding.btnMoviesRetry.isVisible = loadState.source.refresh is LoadState.Error
+        binding.pbMovie.isVisible = loadState.source.refresh is LoadState.Loading
+        binding.lytError.root.isVisible = loadState.source.refresh is LoadState.Error
     }
 
     private fun observeData() {
