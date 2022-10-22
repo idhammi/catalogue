@@ -8,7 +8,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.BuildConfig.apiKey
 import id.idham.catalogue.BuildConfig.baseUrl
-import id.idham.catalogue.CatalogueApp
 import id.idham.catalogue.data.remote.endpoint.ApiService
 import okhttp3.HttpUrl
 import okhttp3.Interceptor

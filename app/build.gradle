@@ -82,6 +82,9 @@ dependencies {
     //koin
     implementation "io.insert-koin:koin-android:$koinVersion"
 
+    //other
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.6'
+
     //testing
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "junit:junit:$junitVersion"

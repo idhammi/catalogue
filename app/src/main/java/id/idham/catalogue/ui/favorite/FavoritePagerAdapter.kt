@@ -2,8 +2,6 @@ package id.idham.catalogue.ui.favorite
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import id.idham.catalogue.ui.favorite.movie.FavoriteMovieFragment
-import id.idham.catalogue.ui.favorite.tvshow.FavoriteTvShowFragment
 
 class FavoritePagerAdapter(f: Fragment) : FragmentStateAdapter(f) {
 
@@ -11,8 +9,8 @@ class FavoritePagerAdapter(f: Fragment) : FragmentStateAdapter(f) {
 
     override fun createFragment(position: Int): Fragment =
         when (position) {
-            0 -> FavoriteMovieFragment()
-            else -> FavoriteTvShowFragment()
+            0 -> FavoriteListFragment(position)
+            else -> FavoriteListFragment(position)
         }
 
 }
