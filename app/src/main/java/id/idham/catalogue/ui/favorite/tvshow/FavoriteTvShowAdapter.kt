@@ -10,7 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.data.local.entity.TvShowEntity
-import id.idham.catalogue.databinding.ItemsFavoriteBinding
+import id.idham.catalogue.databinding.ItemFavoriteBinding
 
 class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
     PagedListAdapter<TvShowEntity, FavoriteTvShowAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -29,7 +29,7 @@ class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemsFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -40,7 +40,7 @@ class FavoriteTvShowAdapter(private val listener: (TvShowEntity?) -> Unit) :
         }
     }
 
-    class ViewHolder(private val binding: ItemsFavoriteBinding) :
+    class ViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: (TvShowEntity?) -> Unit, item: TvShowEntity) {
             with(binding) {

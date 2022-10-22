@@ -16,4 +16,5 @@
     <string name="share_title">Share this movie.</string>
     <string name="empty_desc">No data found</string>
     <string name="something_error">Something error</string>
+    <string name="retry">Retry</string>
 </resources>

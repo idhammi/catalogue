@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import id.idham.catalogue.databinding.FragmentMovieBinding
 import id.idham.catalogue.ui.detail.DetailMovieActivity
-import id.idham.catalogue.utils.gone
-import id.idham.catalogue.utils.observe
-import id.idham.catalogue.utils.visible
-import id.idham.catalogue.vo.Status
+import id.idham.catalogue.ui.movie.adapter.MovieListAdapter
+import id.idham.catalogue.ui.movie.adapter.MovieLoadStateAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieFragment : Fragment() {
@@ -19,7 +23,7 @@ class MovieFragment : Fragment() {
     private val viewModel by viewModel<MovieViewModel>()
     private lateinit var binding: FragmentMovieBinding
 
-    private val movieAdapter = MovieAdapter { movie -> goToDetail(movie?.id) }
+    private var adapter: MovieListAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,26 +34,37 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvMovies.adapter = movieAdapter
+        initView()
         observeData()
     }
 
+    private fun initView() {
+        adapter = MovieListAdapter { movie -> goToDetail(movie?.id) }
+
+        binding.rvMovies.adapter = adapter?.withLoadStateHeaderAndFooter(
+            header = MovieLoadStateAdapter { adapter?.retry() },
+            footer = MovieLoadStateAdapter { adapter?.retry() }
+        )
+
+        adapter?.addLoadStateListener { loadState -> renderUi(loadState) }
+        binding.btnMoviesRetry.setOnClickListener { adapter?.retry() }
+    }
+
+    private fun renderUi(loadState: CombinedLoadStates) {
+        val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
+
+        binding.rvMovies.isVisible = !isListEmpty
+        binding.lytError.root.isVisible = isListEmpty
+
+        binding.rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
+        binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+        binding.btnMoviesRetry.isVisible = loadState.source.refresh is LoadState.Error
+    }
+
     private fun observeData() {
-        with(viewModel) {
-            val movies = getMovies()
-            observe(movies.pagedList) {
-                movieAdapter.submitList(it)
-            }
-            observe(movies.networkState) {
-                movieAdapter.setNetworkState(it)
-                when (it.status) {
-                    Status.LOADING -> if (it.message == "1") binding.progressBar.visible()
-                    Status.ERROR -> {
-                        binding.progressBar.gone()
-                        binding.lytError.root.visible()
-                    }
-                    else -> binding.progressBar.gone()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getMovies().collectLatest { movies ->
+                adapter?.submitData(movies)
             }
         }
     }
@@ -59,6 +74,11 @@ class MovieFragment : Fragment() {
         intent.putExtra(DetailMovieActivity.MOVIE_ID, id)
         intent.putExtra(DetailMovieActivity.MOVIE_TYPE, DetailMovieActivity.MovieType.MOVIE)
         requireContext().startActivity(intent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapter = null
     }
 
 }

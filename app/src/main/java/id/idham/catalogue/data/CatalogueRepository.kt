@@ -3,12 +3,14 @@ package id.idham.catalogue.data
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import id.idham.catalogue.data.local.LocalDataSource
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.data.mapper.MovieMapper
 import id.idham.catalogue.data.mapper.TvShowMapper
 import id.idham.catalogue.data.remote.ApiResponse
+import id.idham.catalogue.data.remote.ApiResponseFlow
 import id.idham.catalogue.data.remote.response.MovieModel
 import id.idham.catalogue.data.remote.response.TvShowModel
 import id.idham.catalogue.data.remote.source.RemoteDataSource
@@ -16,6 +18,7 @@ import id.idham.catalogue.utils.ContextProviders
 import id.idham.catalogue.vo.Pagination
 import id.idham.catalogue.vo.Resource
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class CatalogueRepository(
@@ -34,26 +37,25 @@ class CatalogueRepository(
         .setPageSize(PAGE_SIZE)
         .build()
 
-    override fun getMovies(): Pagination<MovieModel> {
-        return remoteDataSource.getMovies()
+    override fun getMovies(): Flow<PagingData<MovieModel>> {
+        return remoteDataSource.getMoviesFlow()
     }
 
-    override fun getMovieDetail(id: Int): LiveData<Resource<MovieEntity>> {
-        return object : NetworkBoundResource<MovieEntity, MovieModel>(contextProviders) {
-            override fun loadFromDb(): LiveData<MovieEntity> =
+    override fun getMovieDetail(id: Int): Flow<ResourceFlow<MovieEntity>> =
+        object : NetworkBoundResourceFlow<MovieEntity, MovieModel>() {
+            override fun loadFromDB(): Flow<MovieEntity> =
                 localDataSource.getMovieById(id)
 
             override fun shouldFetch(data: MovieEntity?): Boolean =
                 data == null
 
-            override fun createCall(): LiveData<ApiResponse<MovieModel>> =
+            override suspend fun createCall(): Flow<ApiResponseFlow<MovieModel>> =
                 remoteDataSource.getMovieDetail(id)
 
-            override fun saveCallResult(data: MovieModel?) {
-                data?.let { localDataSource.insertMovie(MovieMapper.mapResponseToEntity(data)) }
+            override suspend fun saveCallResult(data: MovieModel) {
+                localDataSource.insertMovie(MovieMapper.mapResponseToEntity(data))
             }
-        }.asLiveData()
-    }
+        }.asFlow()
 
     override fun getTvShows(): Pagination<TvShowModel> {
         return remoteDataSource.getTvShows()

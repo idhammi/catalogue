@@ -1,5 +1,6 @@
 package id.idham.catalogue.data.remote
 
+import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
@@ -33,14 +34,14 @@ fun providesApiKey(): Interceptor = Interceptor { chain ->
     chain.proceed(request)
 }
 
-fun providesHttpClient(): OkHttpClient {
+fun providesHttpClient(context: Context): OkHttpClient {
     return OkHttpClient.Builder().apply {
         retryOnConnectionFailure(true)
         readTimeout(30, TimeUnit.SECONDS)
         writeTimeout(30, TimeUnit.SECONDS)
         addInterceptor(providesApiKey())
         addInterceptor(provideHttpLoggingInterceptor())
-        if (BuildConfig.DEBUG) addInterceptor(ChuckerInterceptor(CatalogueApp.applicationContext()))
+        if (BuildConfig.DEBUG) addInterceptor(ChuckerInterceptor(context))
     }.build()
 }
 

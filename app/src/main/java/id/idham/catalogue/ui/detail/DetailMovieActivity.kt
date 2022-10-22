@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import id.idham.catalogue.BuildConfig.imageUrl
 import id.idham.catalogue.R
+import id.idham.catalogue.data.ResourceFlow
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.databinding.ActivityDetailMovieBinding
@@ -58,7 +59,7 @@ class DetailMovieActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_detail, menu)
         menuItem = menu
         setFavorite()
@@ -99,25 +100,25 @@ class DetailMovieActivity : AppCompatActivity() {
 
     private fun onObserveData(type: MovieType) {
         if (type is MovieType.MOVIE) {
-            viewModel.getMovie().observe(this, {
-                when (it.status) {
-                    Status.LOADING -> {
+            viewModel.getMovie().observe(this) {
+                when (it) {
+                    is ResourceFlow.Loading -> {
                         binding.groupTitle.gone()
                         binding.progressBar.visible()
                     }
-                    Status.SUCCESS -> {
+                    is ResourceFlow.Success -> {
                         binding.groupTitle.visible()
                         binding.progressBar.gone()
                         it.data?.let { data -> populateMovie(data) }
                     }
-                    Status.ERROR -> {
+                    is ResourceFlow.Error -> {
                         binding.progressBar.gone()
                         toast(it.message.toString())
                     }
                 }
-            })
+            }
         } else if (type is MovieType.TV) {
-            viewModel.getTvShow().observe(this, {
+            viewModel.getTvShow().observe(this) {
                 when (it.status) {
                     Status.LOADING -> {
                         binding.groupTitle.gone()
@@ -133,7 +134,7 @@ class DetailMovieActivity : AppCompatActivity() {
                         toast(it.message.toString())
                     }
                 }
-            })
+            }
         }
     }
 

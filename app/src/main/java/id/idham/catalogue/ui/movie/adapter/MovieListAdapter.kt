@@ -1,35 +1,36 @@
-package id.idham.catalogue.ui.favorite.movie
+package id.idham.catalogue.ui.movie.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import id.idham.catalogue.BuildConfig
-import id.idham.catalogue.data.local.entity.MovieEntity
-import id.idham.catalogue.databinding.ItemFavoriteBinding
+import id.idham.catalogue.data.remote.response.MovieModel
+import id.idham.catalogue.databinding.ItemMovieBinding
+import id.idham.catalogue.vo.Resource
+import id.idham.catalogue.vo.Status
 
-class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
-    PagedListAdapter<MovieEntity, FavoriteMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+class MovieListAdapter(private val listener: (MovieModel?) -> Unit) :
+    PagingDataAdapter<MovieModel, MovieListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
-            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieModel>() {
+            override fun areItemsTheSame(oldItem: MovieModel, newItem: MovieModel): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+            override fun areContentsTheSame(oldItem: MovieModel, newItem: MovieModel): Boolean {
                 return oldItem == newItem
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -40,16 +41,15 @@ class FavoriteMovieAdapter(private val listener: (MovieEntity?) -> Unit) :
         }
     }
 
-    class ViewHolder(private val binding: ItemFavoriteBinding) :
+    class ViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(listener: (MovieEntity?) -> Unit, item: MovieEntity) {
+        fun bind(listener: (MovieModel?) -> Unit, item: MovieModel) {
             with(binding) {
-                val title = "${item.title} (${item.getYearRelease()})"
-                tvTitle.text = title
-                tvDesc.text = item.overview
+                tvTitle.text = item.title
+                tvYear.text = item.getYearRelease()
                 itemView.setOnClickListener { listener(item) }
                 Glide.with(itemView.context)
-                    .load(BuildConfig.imageUrl + item.imagePath)
+                    .load(BuildConfig.imageUrl + item.posterPath)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgPhoto)

@@ -7,6 +7,7 @@ import id.idham.catalogue.data.local.dao.TvShowDao
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
 import id.idham.catalogue.utils.SortUtils
+import kotlinx.coroutines.flow.Flow
 
 class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvShowDao) {
 
@@ -15,9 +16,9 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         return movieDao.getFavoriteMovies(query)
     }
 
-    fun getMovieById(id: Int): LiveData<MovieEntity> = movieDao.getMovieById(id)
+    fun getMovieById(id: Int): Flow<MovieEntity> = movieDao.getMovieById(id)
 
-    fun insertMovie(movie: MovieEntity) = movieDao.insert(movie)
+    suspend fun insertMovie(movie: MovieEntity) = movieDao.insert(movie)
 
     fun setFavoriteMovie(movie: MovieEntity, favorite: Boolean) {
         movie.favorite = favorite

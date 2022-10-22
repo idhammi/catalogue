@@ -13,16 +13,24 @@ interface ApiService {
 
     // Movies
     @GET("movie/popular")
-    fun getMoviesPopularAsync(@Query("page") page: Int): Deferred<MovieResponse>
+    suspend fun getMoviesPopularAsync(
+        @Query("page") page: Int
+    ): MovieResponse
 
     @GET("movie/{movieId}")
-    fun getMovieDetailAsync(@Path("movieId") movieId: Int): Deferred<MovieModel>
+    suspend fun getMovieDetailAsync(
+        @Path("movieId") movieId: Int
+    ): MovieModel
 
     // TV Shows
     @GET("tv/popular")
-    fun getTvShowsPopularAsync(@Query("page") page: Int): Deferred<TvShowResponse>
+    fun getTvShowsPopularAsync(
+        @Query("page") page: Int
+    ): Deferred<TvShowResponse>
 
     @GET("tv/{tvId}")
-    fun getTvShowDetailAsync(@Path("tvId") tvId: Int): Deferred<TvShowModel>
+    fun getTvShowDetailAsync(
+        @Path("tvId") tvId: Int
+    ): Deferred<TvShowModel>
 
 }

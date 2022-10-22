@@ -5,7 +5,6 @@ import androidx.paging.PageKeyedDataSource
 import id.idham.catalogue.data.remote.endpoint.ApiService
 import id.idham.catalogue.data.remote.response.TvShowModel
 import id.idham.catalogue.utils.ContextProviders
-import id.idham.catalogue.utils.EspressoIdlingResource
 import id.idham.catalogue.vo.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +23,6 @@ class TvShowsDataSource(
     override fun loadInitial(
         params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, TvShowModel>
     ) {
-        EspressoIdlingResource.increment() // for instrumentation test only
         executeQuery(1) { data -> callback.onResult(data, null, 2) }
     }
 
@@ -33,7 +31,6 @@ class TvShowsDataSource(
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, TvShowModel>) {
         val page = params.key
-        EspressoIdlingResource.increment() // for instrumentation test only
         executeQuery(page) { data -> callback.onResult(data, page + 1) }
     }
 
@@ -58,7 +55,6 @@ class TvShowsDataSource(
                         results.let { list.add(it) }
                     }
                     callback(list)
-                    EspressoIdlingResource.decrement() // for instrumentation test only
                 } catch (t: Throwable) {
                     networkState.postValue(Resource.error(t.message, null, t))
                 }

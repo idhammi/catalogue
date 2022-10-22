@@ -1,6 +1,7 @@
 package id.idham.catalogue.ui.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import id.idham.catalogue.data.CatalogueRepository
 import id.idham.catalogue.data.local.entity.MovieEntity
 import id.idham.catalogue.data.local.entity.TvShowEntity
@@ -13,7 +14,7 @@ class DetailMovieViewModel(private val repository: CatalogueRepository) : ViewMo
         this.id = id
     }
 
-    fun getMovie() = repository.getMovieDetail(id)
+    fun getMovie() = repository.getMovieDetail(id).asLiveData()
 
     fun getTvShow() = repository.getTvShowDetail(id)
 

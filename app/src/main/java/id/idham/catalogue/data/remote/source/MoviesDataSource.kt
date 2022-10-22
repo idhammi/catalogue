@@ -5,7 +5,6 @@ import androidx.paging.PageKeyedDataSource
 import id.idham.catalogue.data.remote.endpoint.ApiService
 import id.idham.catalogue.data.remote.response.MovieModel
 import id.idham.catalogue.utils.ContextProviders
-import id.idham.catalogue.utils.EspressoIdlingResource
 import id.idham.catalogue.vo.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +23,6 @@ class MoviesDataSource(
     override fun loadInitial(
         params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, MovieModel>
     ) {
-        EspressoIdlingResource.increment() // for instrumentation test only
         executeQuery(1) { data -> callback.onResult(data, null, 2) }
     }
 
@@ -32,7 +30,6 @@ class MoviesDataSource(
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, MovieModel>) {
-        EspressoIdlingResource.increment() // for instrumentation test only
         val page = params.key
         executeQuery(page) { data -> callback.onResult(data, page + 1) }
     }
@@ -46,7 +43,7 @@ class MoviesDataSource(
             networkState.postValue(Resource.loading(msg = loadingState))
             GlobalScope.launch(coroutineContext.IO + supervisorJob) {
                 try {
-                    val response = apiService.getMoviesPopularAsync(page).await()
+                    val response = apiService.getMoviesPopularAsync(page)
 
                     lastPage = response.totalPages == page || response.results?.isEmpty() == true
                     if (page == 1 && lastPage) networkState.postValue(
@@ -58,7 +55,6 @@ class MoviesDataSource(
                         results.let { list.add(it) }
                     }
                     callback(list)
-                    EspressoIdlingResource.decrement() // for instrumentation test only
                 } catch (t: Throwable) {
                     networkState.postValue(Resource.error(t.message, null, t))
                 }
