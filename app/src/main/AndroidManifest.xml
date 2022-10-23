@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="id.idham.catalogue">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -15,14 +14,12 @@
         android:theme="@style/Theme.Catalogue"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="id.idham.catalogue.ui.detail.DetailMovieActivity"
-            android:label=""
-            android:screenOrientation="portrait" />
+            android:name="id.idham.catalogue.detail.DetailMovieActivity"
+            android:label="" />
         <activity
-            android:name="id.idham.catalogue.ui.home.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Catalogue.NoActionBar"
-            android:exported="true">
+            android:name="id.idham.catalogue.home.HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Catalogue.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
