@@ -18,9 +18,6 @@
             android:name=".FavoriteActivity"
             android:exported="true"
             android:theme="@style/Theme.Catalogue.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

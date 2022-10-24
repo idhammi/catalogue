@@ -4,20 +4,18 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.Movie
 import id.idham.catalogue.core.domain.model.TvShow
 import id.idham.catalogue.core.ui.BaseListAdapter
 import id.idham.catalogue.core.ui.Equatable
 import id.idham.catalogue.core.utils.SortUtils
 import id.idham.catalogue.core.utils.ext.gone
+import id.idham.catalogue.core.utils.ext.loadImage
 import id.idham.catalogue.core.utils.ext.visible
 import id.idham.catalogue.detail.DetailMovieActivity
 import id.idham.catalogue.favorite.databinding.FragmentFavoriteListBinding
@@ -70,11 +68,7 @@ class FavoriteListFragment(private val index: Int) : Fragment(R.layout.fragment_
                 is TvShow -> goToDetail(item.tvShowId, DetailMovieActivity.MovieType.TV)
             }
         }
-        Glide.with(view.context)
-            .load(imageUrl + imgPath)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(view.findViewById(R.id.img_photo))
+        view.findViewById<ImageView>(R.id.img_photo).loadImage(imgPath)
     }
 
     private fun showOptionsDialog() {

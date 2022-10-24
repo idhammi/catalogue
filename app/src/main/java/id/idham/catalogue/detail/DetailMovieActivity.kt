@@ -6,14 +6,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import id.idham.catalogue.R
 import id.idham.catalogue.core.data.Resource
-import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.Movie
 import id.idham.catalogue.core.domain.model.TvShow
 import id.idham.catalogue.core.utils.ext.gone
+import id.idham.catalogue.core.utils.ext.loadImage
 import id.idham.catalogue.core.utils.ext.toast
 import id.idham.catalogue.core.utils.ext.visible
 import id.idham.catalogue.databinding.ActivityDetailMovieBinding
@@ -135,36 +133,32 @@ class DetailMovieActivity : AppCompatActivity() {
     private fun populateMovie(movie: Movie) {
         mMovie = movie
         isFavorite = movie.isFavorite
-        binding.txtName.text = movie.title
-        binding.txtYear.text = movie.getYearRelease()
-        binding.txtRating.text = movie.getScore()
-        binding.txtLanguage.text = getLanguageName(movie.originalLanguage)
-        binding.txtDetailDescription.text = movie.overview
-        binding.txtReleaseDateTitle.text = resources.getText(R.string.release_date)
-        binding.txtReleaseDate.text = movie.getFormattedDate()
-
-        Glide.with(this)
-            .load(imageUrl + movie.posterPath)
-            .transform(RoundedCorners(20))
-            .into(binding.imgPhoto)
+        with(binding) {
+            txtName.text = movie.title
+            txtYear.text = movie.getYearRelease()
+            txtRating.text = movie.getScore()
+            txtLanguage.text = getLanguageName(movie.originalLanguage)
+            txtDetailDescription.text = movie.overview
+            txtReleaseDateTitle.text = resources.getText(R.string.release_date)
+            txtReleaseDate.text = movie.getFormattedDate()
+            imgPhoto.loadImage(movie.posterPath)
+        }
         setFavorite()
     }
 
     private fun populateTvShow(tvShow: TvShow) {
         mTvShow = tvShow
         isFavorite = tvShow.isFavorite
-        binding.txtName.text = tvShow.name
-        binding.txtYear.text = tvShow.getYearRelease()
-        binding.txtRating.text = tvShow.getScore()
-        binding.txtLanguage.text = getLanguageName(tvShow.originalLanguage)
-        binding.txtDetailDescription.text = tvShow.overview
-        binding.txtReleaseDateTitle.text = resources.getText(R.string.first_air_date)
-        binding.txtReleaseDate.text = tvShow.getFormattedDate()
-
-        Glide.with(this)
-            .load(imageUrl + tvShow.posterPath)
-            .transform(RoundedCorners(20))
-            .into(binding.imgPhoto)
+        with(binding) {
+            txtName.text = tvShow.name
+            txtYear.text = tvShow.getYearRelease()
+            txtRating.text = tvShow.getScore()
+            txtLanguage.text = getLanguageName(tvShow.originalLanguage)
+            txtDetailDescription.text = tvShow.overview
+            txtReleaseDateTitle.text = resources.getText(R.string.first_air_date)
+            txtReleaseDate.text = tvShow.getFormattedDate()
+            imgPhoto.loadImage(tvShow.posterPath)
+        }
         setFavorite()
     }
 

@@ -14,10 +14,10 @@
         android:theme="@style/Theme.Catalogue"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="id.idham.catalogue.detail.DetailMovieActivity"
+            android:name=".detail.DetailMovieActivity"
             android:label="" />
         <activity
-            android:name="id.idham.catalogue.home.HomeActivity"
+            android:name=".home.HomeActivity"
             android:exported="true"
             android:theme="@style/Theme.Catalogue.NoActionBar">
             <intent-filter>

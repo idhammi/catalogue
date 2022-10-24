@@ -6,6 +6,7 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import id.idham.catalogue.core.BuildConfig
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,14 +16,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val apiKey = "ace75ede92ca77970a3c0be85357f2cf"
-const val baseUrl = "https://api.themoviedb.org/3/"
-const val imageUrl = "https://image.tmdb.org/t/p/original/"
+fun provideHttpLoggingInterceptor() = run {
+    HttpLoggingInterceptor().apply {
+        level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
+    }
+}
 
 fun providesApiKey(): Interceptor = Interceptor { chain ->
     var request: Request = chain.request()
     val url: HttpUrl = request.url.newBuilder()
-        .addQueryParameter("api_key", apiKey)
+        .addQueryParameter("api_key", BuildConfig.apiKey)
         .build()
     request = request.newBuilder().url(url).build()
     chain.proceed(request)
@@ -42,7 +49,7 @@ fun providesHttpClient(context: Context): OkHttpClient {
         retryOnConnectionFailure(true)
         readTimeout(30, TimeUnit.SECONDS)
         writeTimeout(30, TimeUnit.SECONDS)
-        addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        addInterceptor(provideHttpLoggingInterceptor())
         addInterceptor(providesApiKey())
         addInterceptor(provideChucker(context))
     }.build()
@@ -59,7 +66,7 @@ fun provideApiClient(
     moshiConverter: Moshi
 ): ApiService {
     return Retrofit.Builder()
-        .baseUrl(baseUrl)
+        .baseUrl(BuildConfig.baseUrl)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshiConverter))
         .addCallAdapterFactory(CoroutineCallAdapterFactory())

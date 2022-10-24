@@ -45,13 +45,14 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
 
     private fun renderUi(loadState: CombinedLoadStates) {
         val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
+        with(binding) {
+            rvMovies.isVisible = !isListEmpty
+            lytEmpty.root.isVisible = isListEmpty
 
-        binding.rvMovies.isVisible = !isListEmpty
-        binding.lytEmpty.root.isVisible = isListEmpty
-
-        binding.rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
-        binding.pbMovie.isVisible = loadState.source.refresh is LoadState.Loading
-        binding.lytError.root.isVisible = loadState.source.refresh is LoadState.Error
+            rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
+            pbMovie.isVisible = loadState.source.refresh is LoadState.Loading
+            lytError.root.isVisible = loadState.source.refresh is LoadState.Error
+        }
     }
 
     private fun observeData() {

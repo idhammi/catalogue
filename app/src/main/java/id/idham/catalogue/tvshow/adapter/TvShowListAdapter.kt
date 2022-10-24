@@ -5,11 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.TvShow
+import id.idham.catalogue.core.utils.ext.loadImage
 import id.idham.catalogue.databinding.ItemMovieBinding
 
 class TvShowListAdapter(private val listener: (TvShow?) -> Unit) :
@@ -34,11 +31,7 @@ class TvShowListAdapter(private val listener: (TvShow?) -> Unit) :
                 tvTitle.text = item.name
                 tvYear.text = item.getYearRelease()
                 itemView.setOnClickListener { listener(item) }
-                Glide.with(itemView.context)
-                    .load(imageUrl + item.posterPath)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgPhoto)
+                imgPhoto.loadImage(item.posterPath)
             }
         }
     }
