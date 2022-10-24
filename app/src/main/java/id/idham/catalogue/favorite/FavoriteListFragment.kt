@@ -11,8 +11,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import id.idham.catalogue.BuildConfig
 import id.idham.catalogue.R
+import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.Movie
 import id.idham.catalogue.core.domain.model.TvShow
 import id.idham.catalogue.core.ui.BaseListAdapter
@@ -72,7 +72,7 @@ class FavoriteListFragment(private val index: Int) : Fragment(R.layout.fragment_
             }
         }
         Glide.with(view.context)
-            .load(BuildConfig.imageUrl + imgPath)
+            .load(imageUrl + imgPath)
             .transition(DrawableTransitionOptions.withCrossFade())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view.findViewById(R.id.img_photo))

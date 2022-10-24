@@ -6,9 +6,6 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import id.idham.catalogue.BuildConfig
-import id.idham.catalogue.BuildConfig.apiKey
-import id.idham.catalogue.BuildConfig.baseUrl
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -17,6 +14,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+
+const val apiKey = "ace75ede92ca77970a3c0be85357f2cf"
+const val baseUrl = "https://api.themoviedb.org/3/"
+const val imageUrl = "https://image.tmdb.org/t/p/original/"
 
 fun providesApiKey(): Interceptor = Interceptor { chain ->
     var request: Request = chain.request()
@@ -43,7 +44,7 @@ fun providesHttpClient(context: Context): OkHttpClient {
         writeTimeout(30, TimeUnit.SECONDS)
         addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         addInterceptor(providesApiKey())
-        if (BuildConfig.DEBUG) addInterceptor(provideChucker(context))
+        addInterceptor(provideChucker(context))
     }.build()
 }
 

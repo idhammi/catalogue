@@ -3,15 +3,17 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
 }
+apply from: '../shared_dependencies.gradle'
 
 android {
-    compileSdkVersion 32
+    namespace 'id.idham.catalogue'
+    compileSdk 32
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "id.idham.catalogue"
-        minSdkVersion 21
-        targetSdkVersion 32
+        minSdk 21
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -23,14 +25,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'baseUrl', '"https://api.themoviedb.org/3/"'
-            buildConfigField 'String', 'imageUrl', '"https://image.tmdb.org/t/p/original/"'
-            buildConfigField 'String', 'apiKey', '"ace75ede92ca77970a3c0be85357f2cf"'
-        }
-        debug {
-            buildConfigField 'String', 'baseUrl', '"https://api.themoviedb.org/3/"'
-            buildConfigField 'String', 'imageUrl', '"https://image.tmdb.org/t/p/original/"'
-            buildConfigField 'String', 'apiKey', '"ace75ede92ca77970a3c0be85357f2cf"'
         }
     }
     compileOptions {
@@ -43,49 +37,19 @@ android {
     buildFeatures {
         viewBinding true
     }
-    namespace 'id.idham.catalogue'
 }
 
 dependencies {
+    implementation project(":core")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:$coreVersion"
 
     //ui
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "com.google.android.material:material:$materialVersion"
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-
-    //database
-    implementation "androidx.room:room-runtime:$roomRuntimeVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-
-    //networking
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingVersion"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
-    implementation "com.squareup.moshi:moshi:$moshiVersion"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    implementation "com.github.chuckerteam.chucker:library:$chuckerVersion"
-
-    //coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutinesAdapterVersion"
-
-    //koin
-    implementation "io.insert-koin:koin-android:$koinVersion"
 
     //other
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.github.kirich1409:viewbindingpropertydelegate:$bindingDelegateVersion"
-
-    //testing
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$junitExtversion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

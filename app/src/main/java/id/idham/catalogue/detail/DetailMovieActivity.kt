@@ -8,9 +8,9 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import id.idham.catalogue.BuildConfig.imageUrl
 import id.idham.catalogue.R
 import id.idham.catalogue.core.data.Resource
+import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.Movie
 import id.idham.catalogue.core.domain.model.TvShow
 import id.idham.catalogue.core.utils.ext.gone
