@@ -1,15 +1,15 @@
 package id.idham.catalogue.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.fragment.app.Fragment
 import id.idham.catalogue.R
-import id.idham.catalogue.core.utils.ext.gone
 import id.idham.catalogue.core.utils.ext.visible
 import id.idham.catalogue.databinding.ActivityHomeBinding
-import id.idham.catalogue.favorite.FavoriteFragment
 import id.idham.catalogue.movie.MovieFragment
 import id.idham.catalogue.tvshow.TvShowFragment
 
@@ -37,8 +37,8 @@ class HomeActivity : AppCompatActivity() {
                     if (currentFragment !is TvShowFragment) fragment = TvShowFragment()
                 }
                 R.id.menu_favorite -> {
-                    binding.toolbar.gone()
-                    if (currentFragment !is FavoriteFragment) fragment = FavoriteFragment()
+                    val uri = Uri.parse("catalogue://favorite")
+                    startActivity(Intent(Intent.ACTION_VIEW, uri))
                 }
             }
             return@setOnItemSelectedListener loadFragment(fragment)

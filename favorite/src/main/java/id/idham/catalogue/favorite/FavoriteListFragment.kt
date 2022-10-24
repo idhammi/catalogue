@@ -11,7 +11,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import id.idham.catalogue.R
 import id.idham.catalogue.core.data.remote.network.imageUrl
 import id.idham.catalogue.core.domain.model.Movie
 import id.idham.catalogue.core.domain.model.TvShow
@@ -20,8 +19,8 @@ import id.idham.catalogue.core.ui.Equatable
 import id.idham.catalogue.core.utils.SortUtils
 import id.idham.catalogue.core.utils.ext.gone
 import id.idham.catalogue.core.utils.ext.visible
-import id.idham.catalogue.databinding.FragmentFavoriteListBinding
 import id.idham.catalogue.detail.DetailMovieActivity
+import id.idham.catalogue.favorite.databinding.FragmentFavoriteListBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteListFragment(private val index: Int) : Fragment(R.layout.fragment_favorite_list) {

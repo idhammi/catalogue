@@ -10,11 +10,9 @@
     <string name="first_air_date">First Air Date</string>
     <string name="favorites">Favorites</string>
     <string name="share">Share</string>
-    <string name="sort">Sort</string>
-    <string name="by_title">By Title</string>
-    <string name="by_rating">By Rating</string>
     <string name="share_title">Share this movie.</string>
     <string name="empty_desc">Data not found</string>
     <string name="something_error">Something error</string>
     <string name="retry">Retry</string>
+    <string name="title_favorite">Favorite</string>
 </resources>

@@ -3,7 +3,6 @@ package id.idham.catalogue.di
 import id.idham.catalogue.core.domain.usecase.CatalogueInteractor
 import id.idham.catalogue.core.domain.usecase.CatalogueUseCase
 import id.idham.catalogue.detail.DetailMovieViewModel
-import id.idham.catalogue.favorite.FavoriteViewModel
 import id.idham.catalogue.movie.MovieViewModel
 import id.idham.catalogue.tvshow.TvShowViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -17,5 +16,4 @@ val viewModelModule = module {
     viewModel { DetailMovieViewModel(get()) }
     viewModel { MovieViewModel(get()) }
     viewModel { TvShowViewModel(get()) }
-    viewModel { FavoriteViewModel(get()) }
 }
