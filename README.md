@@ -1,2 +1,2 @@
-# catalogue
-[![idhammi](https://circleci.com/gh/idhammi/catalogue.svg?style=svg)](https://circleci.com/gh/idhammi/catalogue)
+# Movie Catalogue
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/idhammi/catalogue/tree/modular.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/idhammi/catalogue/tree/modular)
