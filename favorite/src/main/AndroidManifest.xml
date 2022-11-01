@@ -13,7 +13,9 @@
         <dist:fusing dist:include="true" />
     </dist:module>
 
-    <application tools:ignore="MissingApplicationIcon">
+    <application
+        android:supportsRtl="true"
+        tools:ignore="MissingApplicationIcon">
         <activity
             android:name=".FavoriteActivity"
             android:exported="true"
