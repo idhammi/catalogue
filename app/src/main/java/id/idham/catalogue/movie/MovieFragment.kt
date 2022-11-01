@@ -40,18 +40,18 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         )
 
         adapter?.addLoadStateListener { loadState -> renderUi(loadState) }
-        binding.lytError.btnRetry.setOnClickListener { adapter?.retry() }
+        binding.lytMovieError.btnErrorRetry.setOnClickListener { adapter?.retry() }
     }
 
     private fun renderUi(loadState: CombinedLoadStates) {
         val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
         with(binding) {
             rvMovies.isVisible = !isListEmpty
-            lytEmpty.root.isVisible = isListEmpty
+            lytMovieEmpty.root.isVisible = isListEmpty
 
             rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
             pbMovie.isVisible = loadState.source.refresh is LoadState.Loading
-            lytError.root.isVisible = loadState.source.refresh is LoadState.Error
+            lytMovieError.root.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 

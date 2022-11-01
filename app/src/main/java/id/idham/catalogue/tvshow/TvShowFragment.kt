@@ -40,18 +40,18 @@ class TvShowFragment : Fragment(R.layout.fragment_tv_show) {
         )
 
         adapter?.addLoadStateListener { loadState -> renderUi(loadState) }
-        binding.lytError.btnRetry.setOnClickListener { adapter?.retry() }
+        binding.lytTvShowError.btnErrorRetry.setOnClickListener { adapter?.retry() }
     }
 
     private fun renderUi(loadState: CombinedLoadStates) {
         val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter?.itemCount == 0
 
         binding.rvTvShows.isVisible = !isListEmpty
-        binding.lytEmpty.root.isVisible = isListEmpty
+        binding.lytTvShowEmpty.root.isVisible = isListEmpty
 
         binding.rvTvShows.isVisible = loadState.source.refresh is LoadState.NotLoading
         binding.pbTvShow.isVisible = loadState.source.refresh is LoadState.Loading
-        binding.lytError.root.isVisible = loadState.source.refresh is LoadState.Error
+        binding.lytTvShowError.root.isVisible = loadState.source.refresh is LoadState.Error
     }
 
     private fun observeData() {

@@ -35,12 +35,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/lyt_empty"
+        android:id="@+id/lyt_movie_empty"
         layout="@layout/layout_empty"
         android:visibility="gone" />
 
     <include
-        android:id="@+id/lyt_error"
+        android:id="@+id/lyt_movie_error"
         layout="@layout/layout_error"
         android:visibility="gone" />
 
