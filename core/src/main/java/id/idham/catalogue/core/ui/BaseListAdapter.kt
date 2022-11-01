@@ -3,12 +3,12 @@ package id.idham.catalogue.core.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseListAdapter(
-    @IdRes val layoutId: Int,
+    @LayoutRes val layoutId: Int,
     inline val bind: (item: Equatable, view: View) -> Unit
 ) : ListAdapter<Equatable, BaseListAdapter.ViewHolder>(BaseItemCallback()) {
 
