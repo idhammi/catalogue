@@ -1,6 +1,7 @@
 dependencies {
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+    implementation "androidx.multidex:multidex:$multidexVersion"
 
     //koin
     implementation "io.insert-koin:koin-android:$koinVersion"
