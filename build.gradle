@@ -9,7 +9,7 @@ buildscript {
     ext.espressoVersion = '3.4.0'
     ext.materialVersion = '1.7.0'
     ext.recyclerViewVersion = '1.2.0'
-    ext.glideVersion = '4.12.0'
+    ext.glideVersion = '4.14.2'
     ext.retrofitVersion = '2.9.0'
     ext.okhttpLoggingVersion = '5.0.0-alpha.2'
     ext.coroutinesVersion = '1.6.1'
@@ -23,6 +23,8 @@ buildscript {
     ext.bindingDelegateVersion = '1.5.6'
     ext.leakCanaryVersion = '2.9.1'
     ext.multidexVersion = '2.0.1'
+    ext.sqlcipherVersion = '4.5.2'
+    ext.sqliteVersion = '2.2.0'
 
     repositories {
         google()

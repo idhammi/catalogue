@@ -7,10 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import id.idham.catalogue.core.BuildConfig
-import okhttp3.HttpUrl
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -45,6 +42,12 @@ fun provideChucker(context: Context) = run {
 }
 
 fun providesHttpClient(context: Context): OkHttpClient {
+    val hostname = "api.themoviedb.org"
+    val certificatePinner = CertificatePinner.Builder()
+        .add(hostname, "sha256/p+WeEuGncQbjSKYPSzAaKpF/iLcOjFLuZubtsXupYSI=")
+        .add(hostname, "sha256/JSMzqOOrtyOT1kmau6zKhgT676hGgczD5VMdRMyJZFA=")
+        .add(hostname, "sha256/++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI=")
+        .build()
     return OkHttpClient.Builder().apply {
         retryOnConnectionFailure(true)
         readTimeout(30, TimeUnit.SECONDS)
@@ -52,6 +55,7 @@ fun providesHttpClient(context: Context): OkHttpClient {
         addInterceptor(provideHttpLoggingInterceptor())
         addInterceptor(providesApiKey())
         addInterceptor(provideChucker(context))
+        certificatePinner(certificatePinner)
     }.build()
 }
 
