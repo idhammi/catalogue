@@ -10,6 +10,7 @@ import id.idham.catalogue.core.data.remote.network.provideMoshiConverter
 import id.idham.catalogue.core.data.remote.network.providesHttpClient
 import id.idham.catalogue.core.domain.repository.ICatalogueRepository
 import id.idham.catalogue.core.utils.AppExecutors
+import id.idham.catalogue.core.utils.Config
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +20,7 @@ val localModule = module {
     factory { get<AppDatabase>().movieDao() }
     factory { get<AppDatabase>().tvShowDao() }
     single {
-        val passphrase = SQLiteDatabase.getBytes("movieCatalogue".toCharArray())
+        val passphrase = SQLiteDatabase.getBytes(Config.getDbPassphrase().toCharArray())
         val factory = SupportFactory(passphrase)
         Room.databaseBuilder(
             androidContext(),

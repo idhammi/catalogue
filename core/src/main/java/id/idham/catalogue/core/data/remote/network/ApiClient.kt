@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import id.idham.catalogue.core.BuildConfig
+import id.idham.catalogue.core.utils.Config
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,7 +27,7 @@ fun provideHttpLoggingInterceptor() = run {
 fun providesApiKey(): Interceptor = Interceptor { chain ->
     var request: Request = chain.request()
     val url: HttpUrl = request.url.newBuilder()
-        .addQueryParameter("api_key", BuildConfig.apiKey)
+        .addQueryParameter("api_key", Config.getApiKey())
         .build()
     request = request.newBuilder().url(url).build()
     chain.proceed(request)
@@ -42,11 +43,10 @@ fun provideChucker(context: Context) = run {
 }
 
 fun providesHttpClient(context: Context): OkHttpClient {
-    val hostname = "api.themoviedb.org"
     val certificatePinner = CertificatePinner.Builder()
-        .add(hostname, "sha256/p+WeEuGncQbjSKYPSzAaKpF/iLcOjFLuZubtsXupYSI=")
-        .add(hostname, "sha256/JSMzqOOrtyOT1kmau6zKhgT676hGgczD5VMdRMyJZFA=")
-        .add(hostname, "sha256/++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI=")
+        .add(Config.getHostname(), Config.getApiCert1())
+        .add(Config.getHostname(), Config.getApiCert2())
+        .add(Config.getHostname(), Config.getApiCert3())
         .build()
     return OkHttpClient.Builder().apply {
         retryOnConnectionFailure(true)
@@ -70,7 +70,7 @@ fun provideApiClient(
     moshiConverter: Moshi
 ): ApiService {
     return Retrofit.Builder()
-        .baseUrl(BuildConfig.baseUrl)
+        .baseUrl(Config.getBaseUrl())
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshiConverter))
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
