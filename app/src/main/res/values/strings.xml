@@ -15,4 +15,12 @@
     <string name="something_error">Something error</string>
     <string name="retry">Retry</string>
     <string name="title_favorite">Favorite</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="theme_header">Theme</string>
+
+    <!-- Theme Preferences -->
+    <string name="title_dark_mode">Dark mode</string>
+    <string name="key_dark_mode">key_dark_mode</string>
 </resources>

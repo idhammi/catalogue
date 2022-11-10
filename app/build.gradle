@@ -54,6 +54,7 @@ dependencies {
     api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     api "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     api "com.google.android.material:material:$materialVersion"
+    api "androidx.preference:preference-ktx:$preferenceVersion"
 
     //other
     api "com.github.kirich1409:viewbindingpropertydelegate:$bindingDelegateVersion"

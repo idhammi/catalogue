@@ -25,6 +25,7 @@ buildscript {
     ext.multidexVersion = '2.0.1'
     ext.sqlcipherVersion = '4.5.2'
     ext.sqliteVersion = '2.2.0'
+    ext.preferenceVersion = '1.2.0'
 
     repositories {
         google()
